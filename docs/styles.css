@@ -1,0 +1,107 @@
+:root {
+  --jmu-purple: #450084;
+  --jmu-gold: #cbb677;
+  --jmu-slate: #333333;
+  --jmu-dark-gray: #595959;
+  --jmu-med-gray: #b2b2b2;
+  --jmu-light-gray: #d6d6d6;
+  --jmu-light-gold: #f4efe1;
+  --jmu-light-purple: #dacce6;
+}
+
+body {
+  color: var(--jmu-slate);
+}
+
+.navbar {
+  border-bottom: 5px solid var(--jmu-gold);
+}
+
+h1,
+h2,
+h3 {
+  color: var(--jmu-purple);
+  font-weight: 700;
+}
+
+h2 {
+  border-bottom: 3px solid var(--jmu-gold);
+  padding-bottom: 0.25rem;
+  margin-top: 2.2rem;
+}
+
+a {
+  color: var(--jmu-purple);
+}
+
+strong {
+  color: var(--jmu-purple);
+}
+
+code {
+  color: var(--jmu-purple);
+}
+
+pre {
+  border-left: 5px solid var(--jmu-gold);
+}
+
+.python-example {
+  border: 2px solid var(--jmu-light-purple);
+  border-left: 8px solid var(--jmu-purple);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1.25rem 0;
+  background: #ffffff;
+}
+
+.python-example textarea {
+  width: 100%;
+  min-height: 150px;
+  font-family: Consolas, Monaco, "Courier New", monospace;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  border: 1px solid var(--jmu-med-gray);
+  border-radius: 6px;
+  padding: 0.75rem;
+  background: #f8f8f8;
+  color: #111111;
+}
+
+.python-example button {
+  margin-top: 0.75rem;
+  background: var(--jmu-purple);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.python-example button:hover {
+  background: #2f005c;
+}
+
+.python-output {
+  display: none;
+  margin-top: 0.75rem;
+  min-height: 2.5rem;
+  background: #f4efe1;
+  color: #111111;
+  border: 1px solid var(--jmu-gold);
+  border-left: 8px solid var(--jmu-gold);
+  border-radius: 6px;
+  padding: 0.75rem;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+.callout {
+  border-left-color: var(--jmu-gold);
+}
+
+.quarto-title-banner {
+  background: var(--jmu-purple);
+  color: white;
+}

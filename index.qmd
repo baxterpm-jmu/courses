@@ -1,0 +1,1477 @@
+---
+title: "Week 6: For Loops and the `range()` Function"
+subtitle: "IA 241 — Introduction to Programming and Data Science"
+author: "James Madison University"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: false
+    code-copy: true
+    code-fold: false
+    smooth-scroll: true
+    page-layout: full
+    css: styles.css
+    include-in-header:
+      text: |
+        <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+        <script>
+        let pyodideReadyPromise = null;
+
+        async function getPyodide() {
+          if (!pyodideReadyPromise) {
+            pyodideReadyPromise = loadPyodide();
+          }
+          return await pyodideReadyPromise;
+        }
+
+        async function runPythonExample(button) {
+          const container = button.closest(".python-example");
+          const code = container.querySelector("textarea").value;
+          const output = container.querySelector(".python-output");
+
+          output.style.display = "block";
+          output.textContent = "Loading Python and running code...";
+
+          try {
+            const pyodide = await getPyodide();
+
+            pyodide.runPython("import sys\nfrom io import StringIO\nsys.stdout = StringIO()");
+
+            await pyodide.runPythonAsync(code);
+
+            const result = pyodide.runPython("sys.stdout.getvalue()");
+
+            output.textContent = result.trim()
+              ? result
+              : "(Code ran successfully, but nothing was printed.)";
+          } catch (err) {
+            output.textContent = "Error running code:\n" + err;
+          }
+        }
+        </script>
+---
+
+## Learning Goals
+
+By the end of this lesson, you should be able to:
+
+- Explain what a `for` loop does in plain language.
+- Identify the loop variable, iterable, and loop body in Python code.
+- Use `for` loops with lists, tuples, strings, dictionaries, and ranges.
+- Use `range()` to repeat code a controlled number of times.
+- Use `enumerate()` when you need both an index and a value.
+- Use `zip()` when you need to loop over related sequences together.
+- Write simple list comprehensions.
+- Recognize common loop patterns used in data analysis.
+- Debug common loop mistakes, especially indentation and off-by-one errors.
+
+::: {.callout-note}
+## How to use this page
+
+Read the explanation first, predict what the code will do, and then click **Run Code**. Learning loops is much easier when you actively predict the output before running the code.
+:::
+
+---
+
+## Why Loops Matter
+
+Programming is often about doing the same kind of operation many times. In data work, you might need to:
+
+- Clean every row in a dataset.
+- Check every file in a folder.
+- Count how many observations meet a condition.
+- Convert a list of raw values into a new list of cleaned values.
+- Search through text for words, names, locations, or patterns.
+- Build a summary from many individual records.
+
+A loop lets you express the idea: **for each thing in this collection, do something**.
+
+Without loops, you would have to repeat yourself manually. That is slow, error-prone, and impossible once your data gets large.
+
+---
+
+## What Is a `for` Loop?
+
+A `for` loop repeats a block of code once for each item in a collection.
+
+The general structure is:
+
+```python
+for item in collection:
+    # do something with item
+```
+
+There are three important parts:
+
+| Part | Meaning |
+|---|---|
+| `item` | A temporary variable name for the current value |
+| `collection` | The thing being looped over |
+| indented block | The code that runs once per item |
+
+::: {.callout-tip}
+## Plain-language translation
+
+Read this code:
+
+```python
+for fruit in fruits:
+    print(fruit)
+```
+
+as:
+
+> For each fruit in the collection called `fruits`, print that fruit.
+:::
+
+---
+
+## First Example: Looping Over a List
+
+A list stores multiple values in order. A `for` loop can visit each value one at a time.
+
+Before running the code, predict the output.
+
+::: {.python-example}
+<textarea>
+fruits = ["apple", "banana", "cherry"]
+
+for fruit in fruits:
+    print(fruit)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+The loop variable `fruit` takes on one value at a time:
+
+1. First iteration: `fruit = "apple"`
+2. Second iteration: `fruit = "banana"`
+3. Third iteration: `fruit = "cherry"`
+
+After the third item, the list is exhausted, so the loop stops.
+
+---
+
+## Naming the Loop Variable
+
+The loop variable can be named almost anything, but it should be meaningful.
+
+These two examples do the same thing:
+
+```python
+for fruit in fruits:
+    print(fruit)
+```
+
+```python
+for x in fruits:
+    print(x)
+```
+
+The first version is better because `fruit` tells the reader what kind of thing is being processed.
+
+::: {.callout-important}
+## Best practice
+
+Use a singular name for the loop variable and a plural name for the collection.
+
+Examples:
+
+- `for student in students:`
+- `for score in scores:`
+- `for city in cities:`
+- `for file in files:`
+:::
+
+---
+
+## The Loop Body Must Be Indented
+
+The indented lines belong to the loop. The unindented lines run after the loop is finished.
+
+::: {.python-example}
+<textarea>
+fruits = ["apple", "banana", "cherry"]
+
+for fruit in fruits:
+    print("Inside the loop:", fruit)
+
+print("The loop is finished.")
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+Notice that the final `print()` statement only runs once because it is not indented under the loop.
+
+---
+
+## Common Mistake: Incorrect Indentation
+
+Python uses indentation to understand structure. This is different from many other programming languages.
+
+This code is wrong because the loop body is not indented:
+
+```python
+for fruit in fruits:
+print(fruit)
+```
+
+Python expects an indented block after the colon.
+
+::: {.callout-warning}
+## Debugging clue
+
+If you see an error like `IndentationError`, check whether the lines after your `for` statement are indented consistently.
+:::
+
+---
+
+## Iterating Over Tuples
+
+A tuple is similar to a list, but it cannot be changed after it is created.
+
+You can loop over a tuple the same way you loop over a list.
+
+::: {.python-example}
+<textarea>
+numbers = (1, 2, 3)
+
+for num in numbers:
+    print(num)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+For basic looping, lists and tuples behave similarly. The major difference is that lists are mutable, while tuples are immutable.
+
+---
+
+## Iterating Over Strings
+
+A string is also iterable. When you loop over a string, Python gives you one character at a time.
+
+::: {.python-example}
+<textarea>
+for letter in "GEOINT":
+    print(letter)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+This is useful when you need to inspect text character by character.
+
+---
+
+## Example: Counting Letters in a Word
+
+This example counts how many times the letter `a` appears in a word.
+
+::: {.python-example}
+<textarea>
+word = "analysis"
+count = 0
+
+for letter in word:
+    if letter == "a":
+        count += 1
+
+print(count)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+The variable `count` starts at 0. Every time the loop finds an `a`, it adds 1.
+
+---
+
+## Iterating Over Dictionaries
+
+A dictionary stores key-value pairs.
+
+For example:
+
+```python
+student_scores = {
+    "Alice": 90,
+    "Bob": 85,
+    "Charlie": 92
+}
+```
+
+In this dictionary:
+
+- The keys are student names.
+- The values are scores.
+
+Use `.items()` when you want both the key and the value.
+
+::: {.python-example}
+<textarea>
+student_scores = {
+    "Alice": 90,
+    "Bob": 85,
+    "Charlie": 92
+}
+
+for name, score in student_scores.items():
+    print(f"{name}: {score}")
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+---
+
+## Dictionary Looping Options
+
+There are three common ways to loop over a dictionary.
+
+| Method | What you get |
+|---|---|
+| `for key in dictionary:` | Keys |
+| `for key in dictionary.keys():` | Keys |
+| `for value in dictionary.values():` | Values |
+| `for key, value in dictionary.items():` | Key-value pairs |
+
+::: {.python-example}
+<textarea>
+scores = {"Alice": 90, "Bob": 85, "Charlie": 92}
+
+print("Keys:")
+for name in scores:
+    print(name)
+
+print("\nValues:")
+for score in scores.values():
+    print(score)
+
+print("\nKey-value pairs:")
+for name, score in scores.items():
+    print(name, score)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+---
+
+## The `range()` Function
+
+The `range()` function creates a sequence of numbers.
+
+It is commonly used when you want a loop to run a specific number of times.
+
+Common patterns:
+
+```python
+range(m)          # 0 to m - 1
+range(n, m)       # n to m - 1
+range(n, m, step) # n to m - 1 by step
+```
+
+::: {.callout-important}
+## Key idea
+
+`range()` stops **before** the ending number.
+
+So `range(5)` gives:
+
+```text
+0, 1, 2, 3, 4
+```
+
+It does **not** include 5.
+:::
+
+---
+
+## `range(m)`: Start at 0
+
+When `range()` receives one argument, it starts at 0 and stops before that number.
+
+::: {.python-example}
+<textarea>
+for i in range(5):
+    print(i)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+This loop runs five times, but the values are `0, 1, 2, 3, 4`.
+
+---
+
+## `range(n, m)`: Choose a Start and Stop
+
+When `range()` receives two arguments, the first is the starting value and the second is the stopping value.
+
+::: {.python-example}
+<textarea>
+for i in range(1, 6):
+    print(i)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+This produces `1, 2, 3, 4, 5` because the loop stops before 6.
+
+---
+
+## `range(n, m, step)`: Choose the Step Size
+
+The third argument controls how much the value changes each time.
+
+::: {.python-example}
+<textarea>
+for i in range(0, 10, 2):
+    print(i)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+This loop counts by 2.
+
+---
+
+## Counting Backward with `range()`
+
+The step can also be negative.
+
+::: {.python-example}
+<textarea>
+for i in range(5, 0, -1):
+    print(i)
+
+print("Blast off!")
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+Because the stop value is not included, `range(5, 0, -1)` stops before 0.
+
+---
+
+## When Should You Use `range()`?
+
+Use `range()` when you need controlled repetition or numeric positions.
+
+Good uses:
+
+- Repeat something 10 times.
+- Count from one number to another.
+- Access list items by position.
+- Create simulated data.
+
+Less good use:
+
+- Looping over items when you do not need their positions.
+
+Compare these two approaches.
+
+::: {.python-example}
+<textarea>
+data = ["a", "b", "c"]
+
+print("Using range and indexes:")
+for i in range(len(data)):
+    print(i, data[i])
+
+print("\nLooping directly over values:")
+for value in data:
+    print(value)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+---
+
+## `enumerate()`: A Better Way to Track Indexes
+
+Sometimes you need both:
+
+- The position of the item.
+- The item itself.
+
+For that, use `enumerate()`.
+
+::: {.python-example}
+<textarea>
+data = ["a", "b", "c"]
+
+for index, value in enumerate(data):
+    print(index, value)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+`enumerate()` is usually cleaner than this:
+
+```python
+for i in range(len(data)):
+    print(i, data[i])
+```
+
+---
+
+## Starting `enumerate()` at 1
+
+By default, `enumerate()` starts counting at 0. You can change that with `start=1`.
+
+::: {.python-example}
+<textarea>
+tasks = ["load data", "clean data", "analyze data", "write report"]
+
+for number, task in enumerate(tasks, start=1):
+    print(f"Step {number}: {task}")
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+This is useful when creating numbered instructions or reports for humans.
+
+---
+
+## Nested For Loops
+
+A nested loop is a loop inside another loop.
+
+::: {.python-example}
+<textarea>
+for i in range(3):
+    for j in range(2):
+        print(f"i={i}, j={j}")
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+The outer loop controls `i`. The inner loop controls `j`.
+
+For every single value of `i`, the inner loop runs completely.
+
+---
+
+## Understanding Nested Loop Output
+
+Think of nested loops as a table.
+
+If the outer loop has 3 values and the inner loop has 2 values, then the total number of combinations is:
+
+```text
+3 * 2 = 6
+```
+
+::: {.python-example}
+<textarea>
+outer_values = ["A", "B", "C"]
+inner_values = [1, 2]
+
+for outer in outer_values:
+    for inner in inner_values:
+        print(outer, inner)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+---
+
+## What Is an f-string?
+
+An f-string lets you insert variables or expressions directly into a string.
+
+::: {.python-example}
+<textarea>
+name = "Alice"
+print(f"Hello {name}")
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+Anything inside `{}` is evaluated by Python.
+
+::: {.python-example}
+<textarea>
+score = 87
+print(f"The student's score is {score}.")
+print(f"With 5 extra points, the score is {score + 5}.")
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+---
+
+## Formatting Numbers with f-strings
+
+F-strings are useful for formatting decimal numbers.
+
+::: {.python-example}
+<textarea>
+accuracy = 0.87342
+
+print(f"Accuracy: {accuracy}")
+print(f"Accuracy rounded to two decimals: {accuracy:.2f}")
+print(f"Accuracy as a percentage: {accuracy:.1%}")
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+This is especially helpful when reporting results from data analysis.
+
+---
+
+## Common Loop Pattern: Accumulation
+
+Accumulation means combining values across iterations.
+
+A common example is summing numbers.
+
+::: {.python-example}
+<textarea>
+numbers = [1, 2, 3, 4]
+
+total = 0
+
+for num in numbers:
+    total += num
+
+print(total)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+The line `total += num` means:
+
+```python
+total = total + num
+```
+
+---
+
+## Accumulation Example: Average Score
+
+To compute an average manually, we can sum the values and divide by the number of values.
+
+::: {.python-example}
+<textarea>
+scores = [88, 92, 79, 94, 85]
+
+total = 0
+
+for score in scores:
+    total += score
+
+average = total / len(scores)
+
+print(f"Total: {total}")
+print(f"Average: {average:.1f}")
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+Python has built-in tools like `sum()`, but writing the loop helps you understand what is happening.
+
+---
+
+## Common Loop Pattern: Counter
+
+A counter tracks how many times something happens.
+
+::: {.python-example}
+<textarea>
+scores = [0.7, 0.2, 0.9, 0.4]
+
+count = 0
+
+for score in scores:
+    if score >= 0.6:
+        count += 1
+
+print(count)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+This pattern is common when counting records that meet a condition.
+
+---
+
+## Counter Example: Count High Scores
+
+::: {.python-example}
+<textarea>
+scores = [88, 92, 79, 94, 85, 73, 91]
+
+high_score_count = 0
+
+for score in scores:
+    if score >= 90:
+        high_score_count += 1
+
+print(f"Number of high scores: {high_score_count}")
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+Try changing the threshold from `90` to `85` and run it again.
+
+---
+
+## Common Loop Pattern: Building a List
+
+Sometimes we want to create a new list from an existing list.
+
+::: {.python-example}
+<textarea>
+numbers = [1, -2, 3, -4, 5]
+
+positives = []
+
+for num in numbers:
+    if num > 0:
+        positives.append(num)
+
+print(positives)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+This pattern is useful for filtering data.
+
+---
+
+## Building a Transformed List
+
+We can also build a list by transforming each value.
+
+::: {.python-example}
+<textarea>
+temperatures_f = [32, 50, 68, 86]
+
+temperatures_c = []
+
+for temp_f in temperatures_f:
+    temp_c = (temp_f - 32) * 5 / 9
+    temperatures_c.append(temp_c)
+
+print(temperatures_c)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+The new list contains Celsius values created from Fahrenheit values.
+
+---
+
+## List Comprehensions
+
+A list comprehension is a compact way to create a new list.
+
+Traditional loop:
+
+::: {.python-example}
+<textarea>
+squared = []
+
+for num in [1, 2, 3, 4, 5]:
+    squared.append(num ** 2)
+
+print(squared)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+---
+
+## List Comprehension Version
+
+The same logic can be written in one line.
+
+::: {.python-example}
+<textarea>
+squared = [num ** 2 for num in [1, 2, 3, 4, 5]]
+
+print(squared)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+General structure:
+
+```python
+[expression for item in iterable]
+```
+
+With a filter:
+
+```python
+[expression for item in iterable if condition]
+```
+
+---
+
+## Filtering with List Comprehensions
+
+This list comprehension keeps only even numbers.
+
+::: {.python-example}
+<textarea>
+even_numbers = [num for num in range(10) if num % 2 == 0]
+
+print(even_numbers)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+The condition `num % 2 == 0` checks whether the number is evenly divisible by 2.
+
+---
+
+## Conditional Expressions in List Comprehensions
+
+You can also use an `if/else` expression to choose between two output values.
+
+::: {.python-example}
+<textarea>
+labels = ["even" if num % 2 == 0 else "odd" for num in range(6)]
+
+print(labels)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+This does not filter the list. It labels every item.
+
+::: {.callout-warning}
+## Important distinction
+
+These are different patterns:
+
+```python
+[num for num in numbers if num > 0]
+```
+
+filters the list.
+
+```python
+["positive" if num > 0 else "not positive" for num in numbers]
+```
+
+labels every item.
+:::
+
+---
+
+## Looping Over Multiple Sequences with `zip()`
+
+Use `zip()` when two or more lists are connected by position.
+
+::: {.python-example}
+<textarea>
+names = ["Alice", "Bob", "Charlie"]
+scores = [90, 85, 92]
+
+for name, score in zip(names, scores):
+    print(name, score)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+This is cleaner and safer than manually indexing both lists.
+
+---
+
+## `zip()` Example: Build Sentences
+
+::: {.python-example}
+<textarea>
+countries = ["Japan", "France", "Brazil"]
+capitals = ["Tokyo", "Paris", "Brasilia"]
+
+for country, capital in zip(countries, capitals):
+    print(f"The capital of {country} is {capital}.")
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+---
+
+## Looping Over Nested Data Structures
+
+Many real-world datasets contain nested structures. A common example is a list of dictionaries.
+
+::: {.python-example}
+<textarea>
+students = [
+    {"name": "Alice", "score": 90},
+    {"name": "Bob", "score": 85},
+    {"name": "Charlie", "score": 92}
+]
+
+for student in students:
+    print(student["name"], student["score"])
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+This structure is common when working with:
+
+- JSON data
+- API responses
+- Web data
+- Intelligence reports
+- Survey responses
+
+---
+
+## Nested Data Example: Filtering Records
+
+Suppose each dictionary represents one report. We can loop through the reports and print only those with a high priority level.
+
+::: {.python-example}
+<textarea>
+reports = [
+    {"id": 1, "topic": "cyber", "priority": "high"},
+    {"id": 2, "topic": "trade", "priority": "medium"},
+    {"id": 3, "topic": "conflict", "priority": "high"}
+]
+
+for report in reports:
+    if report["priority"] == "high":
+        print(f"Report {report['id']}: {report['topic']}")
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+---
+
+## Controlling Loop Execution with `break`
+
+`break` exits the loop immediately.
+
+::: {.python-example}
+<textarea>
+for num in range(10):
+    if num == 5:
+        break
+    print(num)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+Once `num == 5`, the loop stops entirely.
+
+---
+
+## `break` Example: Search Until Found
+
+This pattern is useful when you are searching for something.
+
+::: {.python-example}
+<textarea>
+names = ["Alice", "Bob", "Charlie", "Diana"]
+
+target = "Charlie"
+
+for name in names:
+    print(f"Checking {name}")
+    if name == target:
+        print("Found the target!")
+        break
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+The loop stops once it finds the target.
+
+---
+
+## Controlling Loop Execution with `continue`
+
+`continue` skips the current iteration and moves to the next one.
+
+::: {.python-example}
+<textarea>
+for num in range(5):
+    if num == 2:
+        continue
+    print(num)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+When `num == 2`, that iteration is skipped.
+
+---
+
+## `continue` Example: Skip Missing Data
+
+In data work, missing values are common. Here we skip `None` values.
+
+::: {.python-example}
+<textarea>
+scores = [88, None, 92, 79, None, 85]
+
+valid_scores = []
+
+for score in scores:
+    if score is None:
+        continue
+    valid_scores.append(score)
+
+print(valid_scores)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+---
+
+## Off-by-One Errors
+
+Off-by-one errors happen when a loop runs one too many or one too few times.
+
+They are especially common with `range()`.
+
+::: {.python-example}
+<textarea>
+for i in range(5):
+    print(i)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+Remember:
+
+- `range(5)` gives `0, 1, 2, 3, 4`.
+- It does not include `5`.
+- `range(1, 6)` gives `1, 2, 3, 4, 5`.
+
+---
+
+## Debugging Strategy: Print the Loop Variable
+
+When a loop is confusing, print the loop variable at each step.
+
+::: {.python-example}
+<textarea>
+numbers = [10, 20, 30]
+
+for num in numbers:
+    print("Current value of num:", num)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+This helps you see what Python is doing during each iteration.
+
+---
+
+## Debugging Strategy: Print Intermediate Results
+
+If a calculation is wrong, print the result as it changes.
+
+::: {.python-example}
+<textarea>
+numbers = [1, 2, 3, 4]
+
+total = 0
+
+for num in numbers:
+    total += num
+    print(f"After adding {num}, total is {total}")
+
+print("Final total:", total)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+This is one of the simplest and most useful debugging strategies.
+
+---
+
+## Practice 1: Predict the Output
+
+Before running the code, answer these questions:
+
+1. How many lines will print?
+2. What is the first line?
+3. What is the last line?
+
+::: {.python-example}
+<textarea>
+for i in range(3):
+    for j in range(4):
+        print(i, j)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+---
+
+## Practice 1 Solution
+
+The loop prints 12 total lines because:
+
+```text
+3 * 4 = 12
+```
+
+The first line is:
+
+```text
+0 0
+```
+
+The last line is:
+
+```text
+2 3
+```
+
+The outer loop goes through `0, 1, 2`. The inner loop goes through `0, 1, 2, 3` for each value of the outer loop.
+
+---
+
+## Practice 2: Modify the Code
+
+Try changing the code so that it prints only scores greater than or equal to 80.
+
+::: {.python-example}
+<textarea>
+scores = [72, 85, 91, 64, 88, 79]
+
+for score in scores:
+    print(score)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+Hint: You need an `if` statement inside the loop.
+
+---
+
+## Practice 2 Solution
+
+::: {.python-example}
+<textarea>
+scores = [72, 85, 91, 64, 88, 79]
+
+for score in scores:
+    if score >= 80:
+        print(score)
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+---
+
+## Practice 3: Build a Summary
+
+The following data represents short reports. Count how many reports have the topic `"cyber"`.
+
+::: {.python-example}
+<textarea>
+reports = [
+    {"id": 1, "topic": "cyber"},
+    {"id": 2, "topic": "trade"},
+    {"id": 3, "topic": "cyber"},
+    {"id": 4, "topic": "conflict"},
+    {"id": 5, "topic": "cyber"}
+]
+
+# Write your solution below
+
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+---
+
+## Practice 3 Solution
+
+::: {.python-example}
+<textarea>
+reports = [
+    {"id": 1, "topic": "cyber"},
+    {"id": 2, "topic": "trade"},
+    {"id": 3, "topic": "cyber"},
+    {"id": 4, "topic": "conflict"},
+    {"id": 5, "topic": "cyber"}
+]
+
+cyber_count = 0
+
+for report in reports:
+    if report["topic"] == "cyber":
+        cyber_count += 1
+
+print(f"Cyber reports: {cyber_count}")
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+---
+
+## Mini-Project: Summarizing Survey Responses
+
+This example shows how loops can summarize simple survey data.
+
+Each response is stored as a dictionary.
+
+::: {.python-example}
+<textarea>
+responses = [
+    {"student": "A", "rating": 5, "completed": True},
+    {"student": "B", "rating": 4, "completed": True},
+    {"student": "C", "rating": 2, "completed": False},
+    {"student": "D", "rating": 5, "completed": True},
+    {"student": "E", "rating": 3, "completed": False}
+]
+
+total_rating = 0
+ completed_count = 0
+
+for response in responses:
+    if response["completed"]:
+        total_rating += response["rating"]
+        completed_count += 1
+
+average_rating = total_rating / completed_count
+
+print(f"Completed responses: {completed_count}")
+print(f"Average rating among completed responses: {average_rating:.2f}")
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+::: {.callout-warning}
+## There is a bug in this mini-project
+
+The code above intentionally contains an indentation error before `completed_count = 0`. Try running it, then fix it by deleting the extra space before `completed_count`.
+:::
+
+---
+
+## Mini-Project Solution
+
+::: {.python-example}
+<textarea>
+responses = [
+    {"student": "A", "rating": 5, "completed": True},
+    {"student": "B", "rating": 4, "completed": True},
+    {"student": "C", "rating": 2, "completed": False},
+    {"student": "D", "rating": 5, "completed": True},
+    {"student": "E", "rating": 3, "completed": False}
+]
+
+total_rating = 0
+completed_count = 0
+
+for response in responses:
+    if response["completed"]:
+        total_rating += response["rating"]
+        completed_count += 1
+
+average_rating = total_rating / completed_count
+
+print(f"Completed responses: {completed_count}")
+print(f"Average rating among completed responses: {average_rating:.2f}")
+</textarea>
+
+<button onclick="runPythonExample(this)">Run Code</button>
+
+<pre class="python-output"></pre>
+:::
+
+---
+
+## Checklist for Writing Loops
+
+When writing a loop, ask yourself:
+
+1. What collection am I looping over?
+2. What should the loop variable be called?
+3. What should happen during each iteration?
+4. Do I need to keep track of a total, count, or new list?
+5. Do I need an `if` statement inside the loop?
+6. Should I use `enumerate()` because I need positions?
+7. Should I use `zip()` because I need to combine related lists?
+8. Could a list comprehension make the code cleaner?
+
+---
+
+## Common Mistakes and Fixes
+
+| Mistake | Symptom | Fix |
+|---|---|---|
+| Forgetting the colon | `SyntaxError` | Add `:` after the `for` statement |
+| Wrong indentation | `IndentationError` or incorrect output | Indent the loop body consistently |
+| Off-by-one error | Missing or extra values | Remember that `range()` excludes the stop value |
+| Using indexes unnecessarily | Code is harder to read | Loop directly over items |
+| Modifying a list while looping over it | Unexpected behavior | Build a new list instead |
+| Forgetting to initialize a counter | `NameError` | Set the counter to 0 before the loop |
+
+---
+
+## Key Takeaways
+
+- A `for` loop repeats code once for each item in an iterable.
+- The loop variable changes value during each iteration.
+- Indentation determines what belongs inside the loop.
+- `range()` is useful for controlled counting.
+- `enumerate()` is useful when you need both index and value.
+- `zip()` is useful when looping over related sequences.
+- Loops are often used for accumulation, counting, filtering, and transformation.
+- List comprehensions provide a compact way to create new lists.
+- Debug loops by printing loop variables and intermediate results.
+
+---
+
+## Additional Practice Prompts
+
+Try solving these on your own:
+
+1. Given a list of numbers, print only the negative numbers.
+2. Given a list of names, print only names longer than five characters.
+3. Given a list of scores, count how many are passing.
+4. Given a dictionary of countries and capitals, print one sentence for each pair.
+5. Given two lists, `students` and `scores`, use `zip()` to print each student's score.
+6. Given a list of words, create a new list containing the length of each word.
+7. Given a list of report dictionaries, count how many reports have `priority == "high"`.
+8. Rewrite a traditional loop as a list comprehension.
+

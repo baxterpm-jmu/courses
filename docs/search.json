@@ -1,0 +1,408 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "",
+    "text": "By the end of this lesson, you should be able to:\n\nExplain what a for loop does in plain language.\nIdentify the loop variable, iterable, and loop body in Python code.\nUse for loops with lists, tuples, strings, dictionaries, and ranges.\nUse range() to repeat code a controlled number of times.\nUse enumerate() when you need both an index and a value.\nUse zip() when you need to loop over related sequences together.\nWrite simple list comprehensions.\nRecognize common loop patterns used in data analysis.\nDebug common loop mistakes, especially indentation and off-by-one errors.\n\n\n\n\n\n\n\nNoteHow to use this page\n\n\n\nRead the explanation first, predict what the code will do, and then click Run Code. Learning loops is much easier when you actively predict the output before running the code."
+  },
+  {
+    "objectID": "index.html#learning-goals",
+    "href": "index.html#learning-goals",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "",
+    "text": "By the end of this lesson, you should be able to:\n\nExplain what a for loop does in plain language.\nIdentify the loop variable, iterable, and loop body in Python code.\nUse for loops with lists, tuples, strings, dictionaries, and ranges.\nUse range() to repeat code a controlled number of times.\nUse enumerate() when you need both an index and a value.\nUse zip() when you need to loop over related sequences together.\nWrite simple list comprehensions.\nRecognize common loop patterns used in data analysis.\nDebug common loop mistakes, especially indentation and off-by-one errors.\n\n\n\n\n\n\n\nNoteHow to use this page\n\n\n\nRead the explanation first, predict what the code will do, and then click Run Code. Learning loops is much easier when you actively predict the output before running the code."
+  },
+  {
+    "objectID": "index.html#why-loops-matter",
+    "href": "index.html#why-loops-matter",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Why Loops Matter",
+    "text": "Why Loops Matter\nProgramming is often about doing the same kind of operation many times. In data work, you might need to:\n\nClean every row in a dataset.\nCheck every file in a folder.\nCount how many observations meet a condition.\nConvert a list of raw values into a new list of cleaned values.\nSearch through text for words, names, locations, or patterns.\nBuild a summary from many individual records.\n\nA loop lets you express the idea: for each thing in this collection, do something.\nWithout loops, you would have to repeat yourself manually. That is slow, error-prone, and impossible once your data gets large."
+  },
+  {
+    "objectID": "index.html#what-is-a-for-loop",
+    "href": "index.html#what-is-a-for-loop",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "What Is a for Loop?",
+    "text": "What Is a for Loop?\nA for loop repeats a block of code once for each item in a collection.\nThe general structure is:\nfor item in collection:\n    # do something with item\nThere are three important parts:\n\n\n\nPart\nMeaning\n\n\n\n\nitem\nA temporary variable name for the current value\n\n\ncollection\nThe thing being looped over\n\n\nindented block\nThe code that runs once per item\n\n\n\n\n\n\n\n\n\nTipPlain-language translation\n\n\n\nRead this code:\nfor fruit in fruits:\n    print(fruit)\nas:\n\nFor each fruit in the collection called fruits, print that fruit."
+  },
+  {
+    "objectID": "index.html#first-example-looping-over-a-list",
+    "href": "index.html#first-example-looping-over-a-list",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "First Example: Looping Over a List",
+    "text": "First Example: Looping Over a List\nA list stores multiple values in order. A for loop can visit each value one at a time.\nBefore running the code, predict the output.\n\nfruits = [\"apple\", \"banana\", \"cherry\"]\n\nfor fruit in fruits:\n    print(fruit)\n\n\nRun Code\n\n\n\nThe loop variable fruit takes on one value at a time:\n\nFirst iteration: fruit = \"apple\"\nSecond iteration: fruit = \"banana\"\nThird iteration: fruit = \"cherry\"\n\nAfter the third item, the list is exhausted, so the loop stops."
+  },
+  {
+    "objectID": "index.html#naming-the-loop-variable",
+    "href": "index.html#naming-the-loop-variable",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Naming the Loop Variable",
+    "text": "Naming the Loop Variable\nThe loop variable can be named almost anything, but it should be meaningful.\nThese two examples do the same thing:\nfor fruit in fruits:\n    print(fruit)\nfor x in fruits:\n    print(x)\nThe first version is better because fruit tells the reader what kind of thing is being processed.\n\n\n\n\n\n\nImportantBest practice\n\n\n\nUse a singular name for the loop variable and a plural name for the collection.\nExamples:\n\nfor student in students:\nfor score in scores:\nfor city in cities:\nfor file in files:"
+  },
+  {
+    "objectID": "index.html#the-loop-body-must-be-indented",
+    "href": "index.html#the-loop-body-must-be-indented",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "The Loop Body Must Be Indented",
+    "text": "The Loop Body Must Be Indented\nThe indented lines belong to the loop. The unindented lines run after the loop is finished.\n\nfruits = [\"apple\", \"banana\", \"cherry\"]\n\nfor fruit in fruits:\n    print(\"Inside the loop:\", fruit)\n\nprint(\"The loop is finished.\")\n\n\nRun Code\n\n\n\nNotice that the final print() statement only runs once because it is not indented under the loop."
+  },
+  {
+    "objectID": "index.html#common-mistake-incorrect-indentation",
+    "href": "index.html#common-mistake-incorrect-indentation",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Common Mistake: Incorrect Indentation",
+    "text": "Common Mistake: Incorrect Indentation\nPython uses indentation to understand structure. This is different from many other programming languages.\nThis code is wrong because the loop body is not indented:\nfor fruit in fruits:\nprint(fruit)\nPython expects an indented block after the colon.\n\n\n\n\n\n\nWarningDebugging clue\n\n\n\nIf you see an error like IndentationError, check whether the lines after your for statement are indented consistently."
+  },
+  {
+    "objectID": "index.html#iterating-over-tuples",
+    "href": "index.html#iterating-over-tuples",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Iterating Over Tuples",
+    "text": "Iterating Over Tuples\nA tuple is similar to a list, but it cannot be changed after it is created.\nYou can loop over a tuple the same way you loop over a list.\n\nnumbers = (1, 2, 3)\n\nfor num in numbers:\n    print(num)\n\n\nRun Code\n\n\n\nFor basic looping, lists and tuples behave similarly. The major difference is that lists are mutable, while tuples are immutable."
+  },
+  {
+    "objectID": "index.html#iterating-over-strings",
+    "href": "index.html#iterating-over-strings",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Iterating Over Strings",
+    "text": "Iterating Over Strings\nA string is also iterable. When you loop over a string, Python gives you one character at a time.\n\nfor letter in \"GEOINT\":\n    print(letter)\n\n\nRun Code\n\n\n\nThis is useful when you need to inspect text character by character."
+  },
+  {
+    "objectID": "index.html#example-counting-letters-in-a-word",
+    "href": "index.html#example-counting-letters-in-a-word",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Example: Counting Letters in a Word",
+    "text": "Example: Counting Letters in a Word\nThis example counts how many times the letter a appears in a word.\n\nword = \"analysis\"\ncount = 0\n\nfor letter in word:\n    if letter == \"a\":\n        count += 1\n\nprint(count)\n\n\nRun Code\n\n\n\nThe variable count starts at 0. Every time the loop finds an a, it adds 1."
+  },
+  {
+    "objectID": "index.html#iterating-over-dictionaries",
+    "href": "index.html#iterating-over-dictionaries",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Iterating Over Dictionaries",
+    "text": "Iterating Over Dictionaries\nA dictionary stores key-value pairs.\nFor example:\nstudent_scores = {\n    \"Alice\": 90,\n    \"Bob\": 85,\n    \"Charlie\": 92\n}\nIn this dictionary:\n\nThe keys are student names.\nThe values are scores.\n\nUse .items() when you want both the key and the value.\n\nstudent_scores = {\n    \"Alice\": 90,\n    \"Bob\": 85,\n    \"Charlie\": 92\n}\n\nfor name, score in student_scores.items():\n    print(f\"{name}: {score}\")\n\n\nRun Code"
+  },
+  {
+    "objectID": "index.html#dictionary-looping-options",
+    "href": "index.html#dictionary-looping-options",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Dictionary Looping Options",
+    "text": "Dictionary Looping Options\nThere are three common ways to loop over a dictionary.\n\n\n\nMethod\nWhat you get\n\n\n\n\nfor key in dictionary:\nKeys\n\n\nfor key in dictionary.keys():\nKeys\n\n\nfor value in dictionary.values():\nValues\n\n\nfor key, value in dictionary.items():\nKey-value pairs\n\n\n\n\nscores = {\"Alice\": 90, \"Bob\": 85, \"Charlie\": 92}\n\nprint(\"Keys:\")\nfor name in scores:\n    print(name)\n\nprint(\"\\nValues:\")\nfor score in scores.values():\n    print(score)\n\nprint(\"\\nKey-value pairs:\")\nfor name, score in scores.items():\n    print(name, score)\n\n\nRun Code"
+  },
+  {
+    "objectID": "index.html#the-range-function",
+    "href": "index.html#the-range-function",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "The range() Function",
+    "text": "The range() Function\nThe range() function creates a sequence of numbers.\nIt is commonly used when you want a loop to run a specific number of times.\nCommon patterns:\nrange(m)          # 0 to m - 1\nrange(n, m)       # n to m - 1\nrange(n, m, step) # n to m - 1 by step\n\n\n\n\n\n\nImportantKey idea\n\n\n\nrange() stops before the ending number.\nSo range(5) gives:\n0, 1, 2, 3, 4\nIt does not include 5."
+  },
+  {
+    "objectID": "index.html#rangem-start-at-0",
+    "href": "index.html#rangem-start-at-0",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "range(m): Start at 0",
+    "text": "range(m): Start at 0\nWhen range() receives one argument, it starts at 0 and stops before that number.\n\nfor i in range(5):\n    print(i)\n\n\nRun Code\n\n\n\nThis loop runs five times, but the values are 0, 1, 2, 3, 4."
+  },
+  {
+    "objectID": "index.html#rangen-m-choose-a-start-and-stop",
+    "href": "index.html#rangen-m-choose-a-start-and-stop",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "range(n, m): Choose a Start and Stop",
+    "text": "range(n, m): Choose a Start and Stop\nWhen range() receives two arguments, the first is the starting value and the second is the stopping value.\n\nfor i in range(1, 6):\n    print(i)\n\n\nRun Code\n\n\n\nThis produces 1, 2, 3, 4, 5 because the loop stops before 6."
+  },
+  {
+    "objectID": "index.html#rangen-m-step-choose-the-step-size",
+    "href": "index.html#rangen-m-step-choose-the-step-size",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "range(n, m, step): Choose the Step Size",
+    "text": "range(n, m, step): Choose the Step Size\nThe third argument controls how much the value changes each time.\n\nfor i in range(0, 10, 2):\n    print(i)\n\n\nRun Code\n\n\n\nThis loop counts by 2."
+  },
+  {
+    "objectID": "index.html#counting-backward-with-range",
+    "href": "index.html#counting-backward-with-range",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Counting Backward with range()",
+    "text": "Counting Backward with range()\nThe step can also be negative.\n\nfor i in range(5, 0, -1):\n    print(i)\n\nprint(\"Blast off!\")\n\n\nRun Code\n\n\n\nBecause the stop value is not included, range(5, 0, -1) stops before 0."
+  },
+  {
+    "objectID": "index.html#when-should-you-use-range",
+    "href": "index.html#when-should-you-use-range",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "When Should You Use range()?",
+    "text": "When Should You Use range()?\nUse range() when you need controlled repetition or numeric positions.\nGood uses:\n\nRepeat something 10 times.\nCount from one number to another.\nAccess list items by position.\nCreate simulated data.\n\nLess good use:\n\nLooping over items when you do not need their positions.\n\nCompare these two approaches.\n\ndata = [\"a\", \"b\", \"c\"]\n\nprint(\"Using range and indexes:\")\nfor i in range(len(data)):\n    print(i, data[i])\n\nprint(\"\\nLooping directly over values:\")\nfor value in data:\n    print(value)\n\n\nRun Code"
+  },
+  {
+    "objectID": "index.html#enumerate-a-better-way-to-track-indexes",
+    "href": "index.html#enumerate-a-better-way-to-track-indexes",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "enumerate(): A Better Way to Track Indexes",
+    "text": "enumerate(): A Better Way to Track Indexes\nSometimes you need both:\n\nThe position of the item.\nThe item itself.\n\nFor that, use enumerate().\n\ndata = [\"a\", \"b\", \"c\"]\n\nfor index, value in enumerate(data):\n    print(index, value)\n\n\nRun Code\n\n\n\nenumerate() is usually cleaner than this:\nfor i in range(len(data)):\n    print(i, data[i])"
+  },
+  {
+    "objectID": "index.html#starting-enumerate-at-1",
+    "href": "index.html#starting-enumerate-at-1",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Starting enumerate() at 1",
+    "text": "Starting enumerate() at 1\nBy default, enumerate() starts counting at 0. You can change that with start=1.\n\ntasks = [\"load data\", \"clean data\", \"analyze data\", \"write report\"]\n\nfor number, task in enumerate(tasks, start=1):\n    print(f\"Step {number}: {task}\")\n\n\nRun Code\n\n\n\nThis is useful when creating numbered instructions or reports for humans."
+  },
+  {
+    "objectID": "index.html#nested-for-loops",
+    "href": "index.html#nested-for-loops",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Nested For Loops",
+    "text": "Nested For Loops\nA nested loop is a loop inside another loop.\n\nfor i in range(3):\n    for j in range(2):\n        print(f\"i={i}, j={j}\")\n\n\nRun Code\n\n\n\nThe outer loop controls i. The inner loop controls j.\nFor every single value of i, the inner loop runs completely."
+  },
+  {
+    "objectID": "index.html#understanding-nested-loop-output",
+    "href": "index.html#understanding-nested-loop-output",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Understanding Nested Loop Output",
+    "text": "Understanding Nested Loop Output\nThink of nested loops as a table.\nIf the outer loop has 3 values and the inner loop has 2 values, then the total number of combinations is:\n3 * 2 = 6\n\nouter_values = [\"A\", \"B\", \"C\"]\ninner_values = [1, 2]\n\nfor outer in outer_values:\n    for inner in inner_values:\n        print(outer, inner)\n\n\nRun Code"
+  },
+  {
+    "objectID": "index.html#what-is-an-f-string",
+    "href": "index.html#what-is-an-f-string",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "What Is an f-string?",
+    "text": "What Is an f-string?\nAn f-string lets you insert variables or expressions directly into a string.\n\nname = \"Alice\"\nprint(f\"Hello {name}\")\n\n\nRun Code\n\n\n\nAnything inside {} is evaluated by Python.\n\nscore = 87\nprint(f\"The student's score is {score}.\")\nprint(f\"With 5 extra points, the score is {score + 5}.\")\n\n\nRun Code"
+  },
+  {
+    "objectID": "index.html#formatting-numbers-with-f-strings",
+    "href": "index.html#formatting-numbers-with-f-strings",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Formatting Numbers with f-strings",
+    "text": "Formatting Numbers with f-strings\nF-strings are useful for formatting decimal numbers.\n\naccuracy = 0.87342\n\nprint(f\"Accuracy: {accuracy}\")\nprint(f\"Accuracy rounded to two decimals: {accuracy:.2f}\")\nprint(f\"Accuracy as a percentage: {accuracy:.1%}\")\n\n\nRun Code\n\n\n\nThis is especially helpful when reporting results from data analysis."
+  },
+  {
+    "objectID": "index.html#common-loop-pattern-accumulation",
+    "href": "index.html#common-loop-pattern-accumulation",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Common Loop Pattern: Accumulation",
+    "text": "Common Loop Pattern: Accumulation\nAccumulation means combining values across iterations.\nA common example is summing numbers.\n\nnumbers = [1, 2, 3, 4]\n\ntotal = 0\n\nfor num in numbers:\n    total += num\n\nprint(total)\n\n\nRun Code\n\n\n\nThe line total += num means:\ntotal = total + num"
+  },
+  {
+    "objectID": "index.html#accumulation-example-average-score",
+    "href": "index.html#accumulation-example-average-score",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Accumulation Example: Average Score",
+    "text": "Accumulation Example: Average Score\nTo compute an average manually, we can sum the values and divide by the number of values.\n\nscores = [88, 92, 79, 94, 85]\n\ntotal = 0\n\nfor score in scores:\n    total += score\n\naverage = total / len(scores)\n\nprint(f\"Total: {total}\")\nprint(f\"Average: {average:.1f}\")\n\n\nRun Code\n\n\n\nPython has built-in tools like sum(), but writing the loop helps you understand what is happening."
+  },
+  {
+    "objectID": "index.html#common-loop-pattern-counter",
+    "href": "index.html#common-loop-pattern-counter",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Common Loop Pattern: Counter",
+    "text": "Common Loop Pattern: Counter\nA counter tracks how many times something happens.\n\nscores = [0.7, 0.2, 0.9, 0.4]\n\ncount = 0\n\nfor score in scores:\n    if score &gt;= 0.6:\n        count += 1\n\nprint(count)\n\n\nRun Code\n\n\n\nThis pattern is common when counting records that meet a condition."
+  },
+  {
+    "objectID": "index.html#counter-example-count-high-scores",
+    "href": "index.html#counter-example-count-high-scores",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Counter Example: Count High Scores",
+    "text": "Counter Example: Count High Scores\n\nscores = [88, 92, 79, 94, 85, 73, 91]\n\nhigh_score_count = 0\n\nfor score in scores:\n    if score &gt;= 90:\n        high_score_count += 1\n\nprint(f\"Number of high scores: {high_score_count}\")\n\n\nRun Code\n\n\n\nTry changing the threshold from 90 to 85 and run it again."
+  },
+  {
+    "objectID": "index.html#common-loop-pattern-building-a-list",
+    "href": "index.html#common-loop-pattern-building-a-list",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Common Loop Pattern: Building a List",
+    "text": "Common Loop Pattern: Building a List\nSometimes we want to create a new list from an existing list.\n\nnumbers = [1, -2, 3, -4, 5]\n\npositives = []\n\nfor num in numbers:\n    if num &gt; 0:\n        positives.append(num)\n\nprint(positives)\n\n\nRun Code\n\n\n\nThis pattern is useful for filtering data."
+  },
+  {
+    "objectID": "index.html#building-a-transformed-list",
+    "href": "index.html#building-a-transformed-list",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Building a Transformed List",
+    "text": "Building a Transformed List\nWe can also build a list by transforming each value.\n\ntemperatures_f = [32, 50, 68, 86]\n\ntemperatures_c = []\n\nfor temp_f in temperatures_f:\n    temp_c = (temp_f - 32) * 5 / 9\n    temperatures_c.append(temp_c)\n\nprint(temperatures_c)\n\n\nRun Code\n\n\n\nThe new list contains Celsius values created from Fahrenheit values."
+  },
+  {
+    "objectID": "index.html#list-comprehensions",
+    "href": "index.html#list-comprehensions",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "List Comprehensions",
+    "text": "List Comprehensions\nA list comprehension is a compact way to create a new list.\nTraditional loop:\n\nsquared = []\n\nfor num in [1, 2, 3, 4, 5]:\n    squared.append(num ** 2)\n\nprint(squared)\n\n\nRun Code"
+  },
+  {
+    "objectID": "index.html#list-comprehension-version",
+    "href": "index.html#list-comprehension-version",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "List Comprehension Version",
+    "text": "List Comprehension Version\nThe same logic can be written in one line.\n\nsquared = [num ** 2 for num in [1, 2, 3, 4, 5]]\n\nprint(squared)\n\n\nRun Code\n\n\n\nGeneral structure:\n[expression for item in iterable]\nWith a filter:\n[expression for item in iterable if condition]"
+  },
+  {
+    "objectID": "index.html#filtering-with-list-comprehensions",
+    "href": "index.html#filtering-with-list-comprehensions",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Filtering with List Comprehensions",
+    "text": "Filtering with List Comprehensions\nThis list comprehension keeps only even numbers.\n\neven_numbers = [num for num in range(10) if num % 2 == 0]\n\nprint(even_numbers)\n\n\nRun Code\n\n\n\nThe condition num % 2 == 0 checks whether the number is evenly divisible by 2."
+  },
+  {
+    "objectID": "index.html#conditional-expressions-in-list-comprehensions",
+    "href": "index.html#conditional-expressions-in-list-comprehensions",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Conditional Expressions in List Comprehensions",
+    "text": "Conditional Expressions in List Comprehensions\nYou can also use an if/else expression to choose between two output values.\n\nlabels = [\"even\" if num % 2 == 0 else \"odd\" for num in range(6)]\n\nprint(labels)\n\n\nRun Code\n\n\n\nThis does not filter the list. It labels every item.\n\n\n\n\n\n\nWarningImportant distinction\n\n\n\nThese are different patterns:\n[num for num in numbers if num &gt; 0]\nfilters the list.\n[\"positive\" if num &gt; 0 else \"not positive\" for num in numbers]\nlabels every item."
+  },
+  {
+    "objectID": "index.html#looping-over-multiple-sequences-with-zip",
+    "href": "index.html#looping-over-multiple-sequences-with-zip",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Looping Over Multiple Sequences with zip()",
+    "text": "Looping Over Multiple Sequences with zip()\nUse zip() when two or more lists are connected by position.\n\nnames = [\"Alice\", \"Bob\", \"Charlie\"]\nscores = [90, 85, 92]\n\nfor name, score in zip(names, scores):\n    print(name, score)\n\n\nRun Code\n\n\n\nThis is cleaner and safer than manually indexing both lists."
+  },
+  {
+    "objectID": "index.html#zip-example-build-sentences",
+    "href": "index.html#zip-example-build-sentences",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "zip() Example: Build Sentences",
+    "text": "zip() Example: Build Sentences\n\ncountries = [\"Japan\", \"France\", \"Brazil\"]\ncapitals = [\"Tokyo\", \"Paris\", \"Brasilia\"]\n\nfor country, capital in zip(countries, capitals):\n    print(f\"The capital of {country} is {capital}.\")\n\n\nRun Code"
+  },
+  {
+    "objectID": "index.html#looping-over-nested-data-structures",
+    "href": "index.html#looping-over-nested-data-structures",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Looping Over Nested Data Structures",
+    "text": "Looping Over Nested Data Structures\nMany real-world datasets contain nested structures. A common example is a list of dictionaries.\n\nstudents = [\n    {\"name\": \"Alice\", \"score\": 90},\n    {\"name\": \"Bob\", \"score\": 85},\n    {\"name\": \"Charlie\", \"score\": 92}\n]\n\nfor student in students:\n    print(student[\"name\"], student[\"score\"])\n\n\nRun Code\n\n\n\nThis structure is common when working with:\n\nJSON data\nAPI responses\nWeb data\nIntelligence reports\nSurvey responses"
+  },
+  {
+    "objectID": "index.html#nested-data-example-filtering-records",
+    "href": "index.html#nested-data-example-filtering-records",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Nested Data Example: Filtering Records",
+    "text": "Nested Data Example: Filtering Records\nSuppose each dictionary represents one report. We can loop through the reports and print only those with a high priority level.\n\nreports = [\n    {\"id\": 1, \"topic\": \"cyber\", \"priority\": \"high\"},\n    {\"id\": 2, \"topic\": \"trade\", \"priority\": \"medium\"},\n    {\"id\": 3, \"topic\": \"conflict\", \"priority\": \"high\"}\n]\n\nfor report in reports:\n    if report[\"priority\"] == \"high\":\n        print(f\"Report {report['id']}: {report['topic']}\")\n\n\nRun Code"
+  },
+  {
+    "objectID": "index.html#controlling-loop-execution-with-break",
+    "href": "index.html#controlling-loop-execution-with-break",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Controlling Loop Execution with break",
+    "text": "Controlling Loop Execution with break\nbreak exits the loop immediately.\n\nfor num in range(10):\n    if num == 5:\n        break\n    print(num)\n\n\nRun Code\n\n\n\nOnce num == 5, the loop stops entirely."
+  },
+  {
+    "objectID": "index.html#break-example-search-until-found",
+    "href": "index.html#break-example-search-until-found",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "break Example: Search Until Found",
+    "text": "break Example: Search Until Found\nThis pattern is useful when you are searching for something.\n\nnames = [\"Alice\", \"Bob\", \"Charlie\", \"Diana\"]\n\ntarget = \"Charlie\"\n\nfor name in names:\n    print(f\"Checking {name}\")\n    if name == target:\n        print(\"Found the target!\")\n        break\n\n\nRun Code\n\n\n\nThe loop stops once it finds the target."
+  },
+  {
+    "objectID": "index.html#controlling-loop-execution-with-continue",
+    "href": "index.html#controlling-loop-execution-with-continue",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Controlling Loop Execution with continue",
+    "text": "Controlling Loop Execution with continue\ncontinue skips the current iteration and moves to the next one.\n\nfor num in range(5):\n    if num == 2:\n        continue\n    print(num)\n\n\nRun Code\n\n\n\nWhen num == 2, that iteration is skipped."
+  },
+  {
+    "objectID": "index.html#continue-example-skip-missing-data",
+    "href": "index.html#continue-example-skip-missing-data",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "continue Example: Skip Missing Data",
+    "text": "continue Example: Skip Missing Data\nIn data work, missing values are common. Here we skip None values.\n\nscores = [88, None, 92, 79, None, 85]\n\nvalid_scores = []\n\nfor score in scores:\n    if score is None:\n        continue\n    valid_scores.append(score)\n\nprint(valid_scores)\n\n\nRun Code"
+  },
+  {
+    "objectID": "index.html#off-by-one-errors",
+    "href": "index.html#off-by-one-errors",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Off-by-One Errors",
+    "text": "Off-by-One Errors\nOff-by-one errors happen when a loop runs one too many or one too few times.\nThey are especially common with range().\n\nfor i in range(5):\n    print(i)\n\n\nRun Code\n\n\n\nRemember:\n\nrange(5) gives 0, 1, 2, 3, 4.\nIt does not include 5.\nrange(1, 6) gives 1, 2, 3, 4, 5."
+  },
+  {
+    "objectID": "index.html#debugging-strategy-print-the-loop-variable",
+    "href": "index.html#debugging-strategy-print-the-loop-variable",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Debugging Strategy: Print the Loop Variable",
+    "text": "Debugging Strategy: Print the Loop Variable\nWhen a loop is confusing, print the loop variable at each step.\n\nnumbers = [10, 20, 30]\n\nfor num in numbers:\n    print(\"Current value of num:\", num)\n\n\nRun Code\n\n\n\nThis helps you see what Python is doing during each iteration."
+  },
+  {
+    "objectID": "index.html#debugging-strategy-print-intermediate-results",
+    "href": "index.html#debugging-strategy-print-intermediate-results",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Debugging Strategy: Print Intermediate Results",
+    "text": "Debugging Strategy: Print Intermediate Results\nIf a calculation is wrong, print the result as it changes.\n\nnumbers = [1, 2, 3, 4]\n\ntotal = 0\n\nfor num in numbers:\n    total += num\n    print(f\"After adding {num}, total is {total}\")\n\nprint(\"Final total:\", total)\n\n\nRun Code\n\n\n\nThis is one of the simplest and most useful debugging strategies."
+  },
+  {
+    "objectID": "index.html#practice-1-predict-the-output",
+    "href": "index.html#practice-1-predict-the-output",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Practice 1: Predict the Output",
+    "text": "Practice 1: Predict the Output\nBefore running the code, answer these questions:\n\nHow many lines will print?\nWhat is the first line?\nWhat is the last line?\n\n\nfor i in range(3):\n    for j in range(4):\n        print(i, j)\n\n\nRun Code"
+  },
+  {
+    "objectID": "index.html#practice-1-solution",
+    "href": "index.html#practice-1-solution",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Practice 1 Solution",
+    "text": "Practice 1 Solution\nThe loop prints 12 total lines because:\n3 * 4 = 12\nThe first line is:\n0 0\nThe last line is:\n2 3\nThe outer loop goes through 0, 1, 2. The inner loop goes through 0, 1, 2, 3 for each value of the outer loop."
+  },
+  {
+    "objectID": "index.html#practice-2-modify-the-code",
+    "href": "index.html#practice-2-modify-the-code",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Practice 2: Modify the Code",
+    "text": "Practice 2: Modify the Code\nTry changing the code so that it prints only scores greater than or equal to 80.\n\nscores = [72, 85, 91, 64, 88, 79]\n\nfor score in scores:\n    print(score)\n\n\nRun Code\n\n\n\nHint: You need an if statement inside the loop."
+  },
+  {
+    "objectID": "index.html#practice-2-solution",
+    "href": "index.html#practice-2-solution",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Practice 2 Solution",
+    "text": "Practice 2 Solution\n\nscores = [72, 85, 91, 64, 88, 79]\n\nfor score in scores:\n    if score &gt;= 80:\n        print(score)\n\n\nRun Code"
+  },
+  {
+    "objectID": "index.html#practice-3-build-a-summary",
+    "href": "index.html#practice-3-build-a-summary",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Practice 3: Build a Summary",
+    "text": "Practice 3: Build a Summary\nThe following data represents short reports. Count how many reports have the topic \"cyber\".\n\nreports = [\n    {\"id\": 1, \"topic\": \"cyber\"},\n    {\"id\": 2, \"topic\": \"trade\"},\n    {\"id\": 3, \"topic\": \"cyber\"},\n    {\"id\": 4, \"topic\": \"conflict\"},\n    {\"id\": 5, \"topic\": \"cyber\"}\n]\n\n# Write your solution below\n\n\n\nRun Code"
+  },
+  {
+    "objectID": "index.html#practice-3-solution",
+    "href": "index.html#practice-3-solution",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Practice 3 Solution",
+    "text": "Practice 3 Solution\n\nreports = [\n    {\"id\": 1, \"topic\": \"cyber\"},\n    {\"id\": 2, \"topic\": \"trade\"},\n    {\"id\": 3, \"topic\": \"cyber\"},\n    {\"id\": 4, \"topic\": \"conflict\"},\n    {\"id\": 5, \"topic\": \"cyber\"}\n]\n\ncyber_count = 0\n\nfor report in reports:\n    if report[\"topic\"] == \"cyber\":\n        cyber_count += 1\n\nprint(f\"Cyber reports: {cyber_count}\")\n\n\nRun Code"
+  },
+  {
+    "objectID": "index.html#mini-project-summarizing-survey-responses",
+    "href": "index.html#mini-project-summarizing-survey-responses",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Mini-Project: Summarizing Survey Responses",
+    "text": "Mini-Project: Summarizing Survey Responses\nThis example shows how loops can summarize simple survey data.\nEach response is stored as a dictionary.\n\nresponses = [\n    {\"student\": \"A\", \"rating\": 5, \"completed\": True},\n    {\"student\": \"B\", \"rating\": 4, \"completed\": True},\n    {\"student\": \"C\", \"rating\": 2, \"completed\": False},\n    {\"student\": \"D\", \"rating\": 5, \"completed\": True},\n    {\"student\": \"E\", \"rating\": 3, \"completed\": False}\n]\n\ntotal_rating = 0\n completed_count = 0\n\nfor response in responses:\n    if response[\"completed\"]:\n        total_rating += response[\"rating\"]\n        completed_count += 1\n\naverage_rating = total_rating / completed_count\n\nprint(f\"Completed responses: {completed_count}\")\nprint(f\"Average rating among completed responses: {average_rating:.2f}\")\n\n\nRun Code\n\n\n\n\n\n\n\n\n\nWarningThere is a bug in this mini-project\n\n\n\nThe code above intentionally contains an indentation error before completed_count = 0. Try running it, then fix it by deleting the extra space before completed_count."
+  },
+  {
+    "objectID": "index.html#mini-project-solution",
+    "href": "index.html#mini-project-solution",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Mini-Project Solution",
+    "text": "Mini-Project Solution\n\nresponses = [\n    {\"student\": \"A\", \"rating\": 5, \"completed\": True},\n    {\"student\": \"B\", \"rating\": 4, \"completed\": True},\n    {\"student\": \"C\", \"rating\": 2, \"completed\": False},\n    {\"student\": \"D\", \"rating\": 5, \"completed\": True},\n    {\"student\": \"E\", \"rating\": 3, \"completed\": False}\n]\n\ntotal_rating = 0\ncompleted_count = 0\n\nfor response in responses:\n    if response[\"completed\"]:\n        total_rating += response[\"rating\"]\n        completed_count += 1\n\naverage_rating = total_rating / completed_count\n\nprint(f\"Completed responses: {completed_count}\")\nprint(f\"Average rating among completed responses: {average_rating:.2f}\")\n\n\nRun Code"
+  },
+  {
+    "objectID": "index.html#checklist-for-writing-loops",
+    "href": "index.html#checklist-for-writing-loops",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Checklist for Writing Loops",
+    "text": "Checklist for Writing Loops\nWhen writing a loop, ask yourself:\n\nWhat collection am I looping over?\nWhat should the loop variable be called?\nWhat should happen during each iteration?\nDo I need to keep track of a total, count, or new list?\nDo I need an if statement inside the loop?\nShould I use enumerate() because I need positions?\nShould I use zip() because I need to combine related lists?\nCould a list comprehension make the code cleaner?"
+  },
+  {
+    "objectID": "index.html#common-mistakes-and-fixes",
+    "href": "index.html#common-mistakes-and-fixes",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Common Mistakes and Fixes",
+    "text": "Common Mistakes and Fixes\n\n\n\n\n\n\n\n\nMistake\nSymptom\nFix\n\n\n\n\nForgetting the colon\nSyntaxError\nAdd : after the for statement\n\n\nWrong indentation\nIndentationError or incorrect output\nIndent the loop body consistently\n\n\nOff-by-one error\nMissing or extra values\nRemember that range() excludes the stop value\n\n\nUsing indexes unnecessarily\nCode is harder to read\nLoop directly over items\n\n\nModifying a list while looping over it\nUnexpected behavior\nBuild a new list instead\n\n\nForgetting to initialize a counter\nNameError\nSet the counter to 0 before the loop"
+  },
+  {
+    "objectID": "index.html#key-takeaways",
+    "href": "index.html#key-takeaways",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Key Takeaways",
+    "text": "Key Takeaways\n\nA for loop repeats code once for each item in an iterable.\nThe loop variable changes value during each iteration.\nIndentation determines what belongs inside the loop.\nrange() is useful for controlled counting.\nenumerate() is useful when you need both index and value.\nzip() is useful when looping over related sequences.\nLoops are often used for accumulation, counting, filtering, and transformation.\nList comprehensions provide a compact way to create new lists.\nDebug loops by printing loop variables and intermediate results."
+  },
+  {
+    "objectID": "index.html#additional-practice-prompts",
+    "href": "index.html#additional-practice-prompts",
+    "title": "Week 6: For Loops and the range() Function",
+    "section": "Additional Practice Prompts",
+    "text": "Additional Practice Prompts\nTry solving these on your own:\n\nGiven a list of numbers, print only the negative numbers.\nGiven a list of names, print only names longer than five characters.\nGiven a list of scores, count how many are passing.\nGiven a dictionary of countries and capitals, print one sentence for each pair.\nGiven two lists, students and scores, use zip() to print each student’s score.\nGiven a list of words, create a new list containing the length of each word.\nGiven a list of report dictionaries, count how many reports have priority == \"high\".\nRewrite a traditional loop as a list comprehension."
+  }
+]

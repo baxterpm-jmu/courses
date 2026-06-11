@@ -1,0 +1,1979 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="James Madison University">
+
+<title>Week 6: For Loops and the range() Function – IA 241: Introduction to Programming and Data Science</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-7bdd816f25dbfaabe2bff6915c254936.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+<script>
+let pyodideReadyPromise = null;
+
+async function getPyodide() {
+  if (!pyodideReadyPromise) {
+    pyodideReadyPromise = loadPyodide();
+  }
+  return await pyodideReadyPromise;
+}
+
+async function runPythonExample(button) {
+  const container = button.closest(".python-example");
+  const code = container.querySelector("textarea").value;
+  const output = container.querySelector(".python-output");
+
+  output.style.display = "block";
+  output.textContent = "Loading Python and running code...";
+
+  try {
+    const pyodide = await getPyodide();
+
+    pyodide.runPython("import sys\nfrom io import StringIO\nsys.stdout = StringIO()");
+
+    await pyodide.runPythonAsync(code);
+
+    const result = pyodide.runPython("sys.stdout.getvalue()");
+
+    output.textContent = result.trim()
+      ? result
+      : "(Code ran successfully, but nothing was printed.)";
+  } catch (err) {
+    output.textContent = "Error running code:\n" + err;
+  }
+}
+</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">IA 241: Introduction to Programming and Data Science</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Week 6: For Loops</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#learning-goals" id="toc-learning-goals" class="nav-link active" data-scroll-target="#learning-goals">Learning Goals</a></li>
+  <li><a href="#why-loops-matter" id="toc-why-loops-matter" class="nav-link" data-scroll-target="#why-loops-matter">Why Loops Matter</a></li>
+  <li><a href="#what-is-a-for-loop" id="toc-what-is-a-for-loop" class="nav-link" data-scroll-target="#what-is-a-for-loop">What Is a <code>for</code> Loop?</a></li>
+  <li><a href="#first-example-looping-over-a-list" id="toc-first-example-looping-over-a-list" class="nav-link" data-scroll-target="#first-example-looping-over-a-list">First Example: Looping Over a List</a></li>
+  <li><a href="#naming-the-loop-variable" id="toc-naming-the-loop-variable" class="nav-link" data-scroll-target="#naming-the-loop-variable">Naming the Loop Variable</a></li>
+  <li><a href="#the-loop-body-must-be-indented" id="toc-the-loop-body-must-be-indented" class="nav-link" data-scroll-target="#the-loop-body-must-be-indented">The Loop Body Must Be Indented</a></li>
+  <li><a href="#common-mistake-incorrect-indentation" id="toc-common-mistake-incorrect-indentation" class="nav-link" data-scroll-target="#common-mistake-incorrect-indentation">Common Mistake: Incorrect Indentation</a></li>
+  <li><a href="#iterating-over-tuples" id="toc-iterating-over-tuples" class="nav-link" data-scroll-target="#iterating-over-tuples">Iterating Over Tuples</a></li>
+  <li><a href="#iterating-over-strings" id="toc-iterating-over-strings" class="nav-link" data-scroll-target="#iterating-over-strings">Iterating Over Strings</a></li>
+  <li><a href="#example-counting-letters-in-a-word" id="toc-example-counting-letters-in-a-word" class="nav-link" data-scroll-target="#example-counting-letters-in-a-word">Example: Counting Letters in a Word</a></li>
+  <li><a href="#iterating-over-dictionaries" id="toc-iterating-over-dictionaries" class="nav-link" data-scroll-target="#iterating-over-dictionaries">Iterating Over Dictionaries</a></li>
+  <li><a href="#dictionary-looping-options" id="toc-dictionary-looping-options" class="nav-link" data-scroll-target="#dictionary-looping-options">Dictionary Looping Options</a></li>
+  <li><a href="#the-range-function" id="toc-the-range-function" class="nav-link" data-scroll-target="#the-range-function">The <code>range()</code> Function</a></li>
+  <li><a href="#rangem-start-at-0" id="toc-rangem-start-at-0" class="nav-link" data-scroll-target="#rangem-start-at-0"><code>range(m)</code>: Start at 0</a></li>
+  <li><a href="#rangen-m-choose-a-start-and-stop" id="toc-rangen-m-choose-a-start-and-stop" class="nav-link" data-scroll-target="#rangen-m-choose-a-start-and-stop"><code>range(n, m)</code>: Choose a Start and Stop</a></li>
+  <li><a href="#rangen-m-step-choose-the-step-size" id="toc-rangen-m-step-choose-the-step-size" class="nav-link" data-scroll-target="#rangen-m-step-choose-the-step-size"><code>range(n, m, step)</code>: Choose the Step Size</a></li>
+  <li><a href="#counting-backward-with-range" id="toc-counting-backward-with-range" class="nav-link" data-scroll-target="#counting-backward-with-range">Counting Backward with <code>range()</code></a></li>
+  <li><a href="#when-should-you-use-range" id="toc-when-should-you-use-range" class="nav-link" data-scroll-target="#when-should-you-use-range">When Should You Use <code>range()</code>?</a></li>
+  <li><a href="#enumerate-a-better-way-to-track-indexes" id="toc-enumerate-a-better-way-to-track-indexes" class="nav-link" data-scroll-target="#enumerate-a-better-way-to-track-indexes"><code>enumerate()</code>: A Better Way to Track Indexes</a></li>
+  <li><a href="#starting-enumerate-at-1" id="toc-starting-enumerate-at-1" class="nav-link" data-scroll-target="#starting-enumerate-at-1">Starting <code>enumerate()</code> at 1</a></li>
+  <li><a href="#nested-for-loops" id="toc-nested-for-loops" class="nav-link" data-scroll-target="#nested-for-loops">Nested For Loops</a></li>
+  <li><a href="#understanding-nested-loop-output" id="toc-understanding-nested-loop-output" class="nav-link" data-scroll-target="#understanding-nested-loop-output">Understanding Nested Loop Output</a></li>
+  <li><a href="#what-is-an-f-string" id="toc-what-is-an-f-string" class="nav-link" data-scroll-target="#what-is-an-f-string">What Is an f-string?</a></li>
+  <li><a href="#formatting-numbers-with-f-strings" id="toc-formatting-numbers-with-f-strings" class="nav-link" data-scroll-target="#formatting-numbers-with-f-strings">Formatting Numbers with f-strings</a></li>
+  <li><a href="#common-loop-pattern-accumulation" id="toc-common-loop-pattern-accumulation" class="nav-link" data-scroll-target="#common-loop-pattern-accumulation">Common Loop Pattern: Accumulation</a></li>
+  <li><a href="#accumulation-example-average-score" id="toc-accumulation-example-average-score" class="nav-link" data-scroll-target="#accumulation-example-average-score">Accumulation Example: Average Score</a></li>
+  <li><a href="#common-loop-pattern-counter" id="toc-common-loop-pattern-counter" class="nav-link" data-scroll-target="#common-loop-pattern-counter">Common Loop Pattern: Counter</a></li>
+  <li><a href="#counter-example-count-high-scores" id="toc-counter-example-count-high-scores" class="nav-link" data-scroll-target="#counter-example-count-high-scores">Counter Example: Count High Scores</a></li>
+  <li><a href="#common-loop-pattern-building-a-list" id="toc-common-loop-pattern-building-a-list" class="nav-link" data-scroll-target="#common-loop-pattern-building-a-list">Common Loop Pattern: Building a List</a></li>
+  <li><a href="#building-a-transformed-list" id="toc-building-a-transformed-list" class="nav-link" data-scroll-target="#building-a-transformed-list">Building a Transformed List</a></li>
+  <li><a href="#list-comprehensions" id="toc-list-comprehensions" class="nav-link" data-scroll-target="#list-comprehensions">List Comprehensions</a></li>
+  <li><a href="#list-comprehension-version" id="toc-list-comprehension-version" class="nav-link" data-scroll-target="#list-comprehension-version">List Comprehension Version</a></li>
+  <li><a href="#filtering-with-list-comprehensions" id="toc-filtering-with-list-comprehensions" class="nav-link" data-scroll-target="#filtering-with-list-comprehensions">Filtering with List Comprehensions</a></li>
+  <li><a href="#conditional-expressions-in-list-comprehensions" id="toc-conditional-expressions-in-list-comprehensions" class="nav-link" data-scroll-target="#conditional-expressions-in-list-comprehensions">Conditional Expressions in List Comprehensions</a></li>
+  <li><a href="#looping-over-multiple-sequences-with-zip" id="toc-looping-over-multiple-sequences-with-zip" class="nav-link" data-scroll-target="#looping-over-multiple-sequences-with-zip">Looping Over Multiple Sequences with <code>zip()</code></a></li>
+  <li><a href="#zip-example-build-sentences" id="toc-zip-example-build-sentences" class="nav-link" data-scroll-target="#zip-example-build-sentences"><code>zip()</code> Example: Build Sentences</a></li>
+  <li><a href="#looping-over-nested-data-structures" id="toc-looping-over-nested-data-structures" class="nav-link" data-scroll-target="#looping-over-nested-data-structures">Looping Over Nested Data Structures</a></li>
+  <li><a href="#nested-data-example-filtering-records" id="toc-nested-data-example-filtering-records" class="nav-link" data-scroll-target="#nested-data-example-filtering-records">Nested Data Example: Filtering Records</a></li>
+  <li><a href="#controlling-loop-execution-with-break" id="toc-controlling-loop-execution-with-break" class="nav-link" data-scroll-target="#controlling-loop-execution-with-break">Controlling Loop Execution with <code>break</code></a></li>
+  <li><a href="#break-example-search-until-found" id="toc-break-example-search-until-found" class="nav-link" data-scroll-target="#break-example-search-until-found"><code>break</code> Example: Search Until Found</a></li>
+  <li><a href="#controlling-loop-execution-with-continue" id="toc-controlling-loop-execution-with-continue" class="nav-link" data-scroll-target="#controlling-loop-execution-with-continue">Controlling Loop Execution with <code>continue</code></a></li>
+  <li><a href="#continue-example-skip-missing-data" id="toc-continue-example-skip-missing-data" class="nav-link" data-scroll-target="#continue-example-skip-missing-data"><code>continue</code> Example: Skip Missing Data</a></li>
+  <li><a href="#off-by-one-errors" id="toc-off-by-one-errors" class="nav-link" data-scroll-target="#off-by-one-errors">Off-by-One Errors</a></li>
+  <li><a href="#debugging-strategy-print-the-loop-variable" id="toc-debugging-strategy-print-the-loop-variable" class="nav-link" data-scroll-target="#debugging-strategy-print-the-loop-variable">Debugging Strategy: Print the Loop Variable</a></li>
+  <li><a href="#debugging-strategy-print-intermediate-results" id="toc-debugging-strategy-print-intermediate-results" class="nav-link" data-scroll-target="#debugging-strategy-print-intermediate-results">Debugging Strategy: Print Intermediate Results</a></li>
+  <li><a href="#practice-1-predict-the-output" id="toc-practice-1-predict-the-output" class="nav-link" data-scroll-target="#practice-1-predict-the-output">Practice 1: Predict the Output</a></li>
+  <li><a href="#practice-1-solution" id="toc-practice-1-solution" class="nav-link" data-scroll-target="#practice-1-solution">Practice 1 Solution</a></li>
+  <li><a href="#practice-2-modify-the-code" id="toc-practice-2-modify-the-code" class="nav-link" data-scroll-target="#practice-2-modify-the-code">Practice 2: Modify the Code</a></li>
+  <li><a href="#practice-2-solution" id="toc-practice-2-solution" class="nav-link" data-scroll-target="#practice-2-solution">Practice 2 Solution</a></li>
+  <li><a href="#practice-3-build-a-summary" id="toc-practice-3-build-a-summary" class="nav-link" data-scroll-target="#practice-3-build-a-summary">Practice 3: Build a Summary</a></li>
+  <li><a href="#practice-3-solution" id="toc-practice-3-solution" class="nav-link" data-scroll-target="#practice-3-solution">Practice 3 Solution</a></li>
+  <li><a href="#mini-project-summarizing-survey-responses" id="toc-mini-project-summarizing-survey-responses" class="nav-link" data-scroll-target="#mini-project-summarizing-survey-responses">Mini-Project: Summarizing Survey Responses</a></li>
+  <li><a href="#mini-project-solution" id="toc-mini-project-solution" class="nav-link" data-scroll-target="#mini-project-solution">Mini-Project Solution</a></li>
+  <li><a href="#checklist-for-writing-loops" id="toc-checklist-for-writing-loops" class="nav-link" data-scroll-target="#checklist-for-writing-loops">Checklist for Writing Loops</a></li>
+  <li><a href="#common-mistakes-and-fixes" id="toc-common-mistakes-and-fixes" class="nav-link" data-scroll-target="#common-mistakes-and-fixes">Common Mistakes and Fixes</a></li>
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways</a></li>
+  <li><a href="#additional-practice-prompts" id="toc-additional-practice-prompts" class="nav-link" data-scroll-target="#additional-practice-prompts">Additional Practice Prompts</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content column-page-left" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Week 6: For Loops and the <code>range()</code> Function</h1>
+<p class="subtitle lead">IA 241 — Introduction to Programming and Data Science</p>
+</div>
+
+
+
+<div class="quarto-title-meta column-page-left">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>James Madison University </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="learning-goals" class="level2">
+<h2 class="anchored" data-anchor-id="learning-goals">Learning Goals</h2>
+<p>By the end of this lesson, you should be able to:</p>
+<ul>
+<li>Explain what a <code>for</code> loop does in plain language.</li>
+<li>Identify the loop variable, iterable, and loop body in Python code.</li>
+<li>Use <code>for</code> loops with lists, tuples, strings, dictionaries, and ranges.</li>
+<li>Use <code>range()</code> to repeat code a controlled number of times.</li>
+<li>Use <code>enumerate()</code> when you need both an index and a value.</li>
+<li>Use <code>zip()</code> when you need to loop over related sequences together.</li>
+<li>Write simple list comprehensions.</li>
+<li>Recognize common loop patterns used in data analysis.</li>
+<li>Debug common loop mistakes, especially indentation and off-by-one errors.</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>How to use this page
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Read the explanation first, predict what the code will do, and then click <strong>Run Code</strong>. Learning loops is much easier when you actively predict the output before running the code.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="why-loops-matter" class="level2">
+<h2 class="anchored" data-anchor-id="why-loops-matter">Why Loops Matter</h2>
+<p>Programming is often about doing the same kind of operation many times. In data work, you might need to:</p>
+<ul>
+<li>Clean every row in a dataset.</li>
+<li>Check every file in a folder.</li>
+<li>Count how many observations meet a condition.</li>
+<li>Convert a list of raw values into a new list of cleaned values.</li>
+<li>Search through text for words, names, locations, or patterns.</li>
+<li>Build a summary from many individual records.</li>
+</ul>
+<p>A loop lets you express the idea: <strong>for each thing in this collection, do something</strong>.</p>
+<p>Without loops, you would have to repeat yourself manually. That is slow, error-prone, and impossible once your data gets large.</p>
+<hr>
+</section>
+<section id="what-is-a-for-loop" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-a-for-loop">What Is a <code>for</code> Loop?</h2>
+<p>A <code>for</code> loop repeats a block of code once for each item in a collection.</p>
+<p>The general structure is:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> item <span class="kw">in</span> collection:</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># do something with item</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>There are three important parts:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Part</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>item</code></td>
+<td>A temporary variable name for the current value</td>
+</tr>
+<tr class="even">
+<td><code>collection</code></td>
+<td>The thing being looped over</td>
+</tr>
+<tr class="odd">
+<td>indented block</td>
+<td>The code that runs once per item</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Plain-language translation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Read this code:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> fruit <span class="kw">in</span> fruits:</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(fruit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>as:</p>
+<blockquote class="blockquote">
+<p>For each fruit in the collection called <code>fruits</code>, print that fruit.</p>
+</blockquote>
+</div>
+</div>
+<hr>
+</section>
+<section id="first-example-looping-over-a-list" class="level2">
+<h2 class="anchored" data-anchor-id="first-example-looping-over-a-list">First Example: Looping Over a List</h2>
+<p>A list stores multiple values in order. A <code>for</code> loop can visit each value one at a time.</p>
+<p>Before running the code, predict the output.</p>
+<div class="python-example">
+<textarea>fruits = ["apple", "banana", "cherry"]
+
+for fruit in fruits:
+    print(fruit)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>The loop variable <code>fruit</code> takes on one value at a time:</p>
+<ol type="1">
+<li>First iteration: <code>fruit = "apple"</code></li>
+<li>Second iteration: <code>fruit = "banana"</code></li>
+<li>Third iteration: <code>fruit = "cherry"</code></li>
+</ol>
+<p>After the third item, the list is exhausted, so the loop stops.</p>
+<hr>
+</section>
+<section id="naming-the-loop-variable" class="level2">
+<h2 class="anchored" data-anchor-id="naming-the-loop-variable">Naming the Loop Variable</h2>
+<p>The loop variable can be named almost anything, but it should be meaningful.</p>
+<p>These two examples do the same thing:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> fruit <span class="kw">in</span> fruits:</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(fruit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="kw">in</span> fruits:</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The first version is better because <code>fruit</code> tells the reader what kind of thing is being processed.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Best practice
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Use a singular name for the loop variable and a plural name for the collection.</p>
+<p>Examples:</p>
+<ul>
+<li><code>for student in students:</code></li>
+<li><code>for score in scores:</code></li>
+<li><code>for city in cities:</code></li>
+<li><code>for file in files:</code></li>
+</ul>
+</div>
+</div>
+<hr>
+</section>
+<section id="the-loop-body-must-be-indented" class="level2">
+<h2 class="anchored" data-anchor-id="the-loop-body-must-be-indented">The Loop Body Must Be Indented</h2>
+<p>The indented lines belong to the loop. The unindented lines run after the loop is finished.</p>
+<div class="python-example">
+<textarea>fruits = ["apple", "banana", "cherry"]
+
+for fruit in fruits:
+    print("Inside the loop:", fruit)
+
+print("The loop is finished.")
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>Notice that the final <code>print()</code> statement only runs once because it is not indented under the loop.</p>
+<hr>
+</section>
+<section id="common-mistake-incorrect-indentation" class="level2">
+<h2 class="anchored" data-anchor-id="common-mistake-incorrect-indentation">Common Mistake: Incorrect Indentation</h2>
+<p>Python uses indentation to understand structure. This is different from many other programming languages.</p>
+<p>This code is wrong because the loop body is not indented:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> fruit <span class="kw">in</span> fruits:</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(fruit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Python expects an indented block after the colon.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Debugging clue
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you see an error like <code>IndentationError</code>, check whether the lines after your <code>for</code> statement are indented consistently.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="iterating-over-tuples" class="level2">
+<h2 class="anchored" data-anchor-id="iterating-over-tuples">Iterating Over Tuples</h2>
+<p>A tuple is similar to a list, but it cannot be changed after it is created.</p>
+<p>You can loop over a tuple the same way you loop over a list.</p>
+<div class="python-example">
+<textarea>numbers = (1, 2, 3)
+
+for num in numbers:
+    print(num)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>For basic looping, lists and tuples behave similarly. The major difference is that lists are mutable, while tuples are immutable.</p>
+<hr>
+</section>
+<section id="iterating-over-strings" class="level2">
+<h2 class="anchored" data-anchor-id="iterating-over-strings">Iterating Over Strings</h2>
+<p>A string is also iterable. When you loop over a string, Python gives you one character at a time.</p>
+<div class="python-example">
+<textarea>for letter in "GEOINT":
+    print(letter)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>This is useful when you need to inspect text character by character.</p>
+<hr>
+</section>
+<section id="example-counting-letters-in-a-word" class="level2">
+<h2 class="anchored" data-anchor-id="example-counting-letters-in-a-word">Example: Counting Letters in a Word</h2>
+<p>This example counts how many times the letter <code>a</code> appears in a word.</p>
+<div class="python-example">
+<textarea>word = "analysis"
+count = 0
+
+for letter in word:
+    if letter == "a":
+        count += 1
+
+print(count)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>The variable <code>count</code> starts at 0. Every time the loop finds an <code>a</code>, it adds 1.</p>
+<hr>
+</section>
+<section id="iterating-over-dictionaries" class="level2">
+<h2 class="anchored" data-anchor-id="iterating-over-dictionaries">Iterating Over Dictionaries</h2>
+<p>A dictionary stores key-value pairs.</p>
+<p>For example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>student_scores <span class="op">=</span> {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Alice"</span>: <span class="dv">90</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Bob"</span>: <span class="dv">85</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Charlie"</span>: <span class="dv">92</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>In this dictionary:</p>
+<ul>
+<li>The keys are student names.</li>
+<li>The values are scores.</li>
+</ul>
+<p>Use <code>.items()</code> when you want both the key and the value.</p>
+<div class="python-example">
+<textarea>student_scores = {
+    "Alice": 90,
+    "Bob": 85,
+    "Charlie": 92
+}
+
+for name, score in student_scores.items():
+    print(f"{name}: {score}")
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<hr>
+</section>
+<section id="dictionary-looping-options" class="level2">
+<h2 class="anchored" data-anchor-id="dictionary-looping-options">Dictionary Looping Options</h2>
+<p>There are three common ways to loop over a dictionary.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Method</th>
+<th>What you get</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>for key in dictionary:</code></td>
+<td>Keys</td>
+</tr>
+<tr class="even">
+<td><code>for key in dictionary.keys():</code></td>
+<td>Keys</td>
+</tr>
+<tr class="odd">
+<td><code>for value in dictionary.values():</code></td>
+<td>Values</td>
+</tr>
+<tr class="even">
+<td><code>for key, value in dictionary.items():</code></td>
+<td>Key-value pairs</td>
+</tr>
+</tbody>
+</table>
+<div class="python-example">
+<textarea>scores = {"Alice": 90, "Bob": 85, "Charlie": 92}
+
+print("Keys:")
+for name in scores:
+    print(name)
+
+print("\nValues:")
+for score in scores.values():
+    print(score)
+
+print("\nKey-value pairs:")
+for name, score in scores.items():
+    print(name, score)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<hr>
+</section>
+<section id="the-range-function" class="level2">
+<h2 class="anchored" data-anchor-id="the-range-function">The <code>range()</code> Function</h2>
+<p>The <code>range()</code> function creates a sequence of numbers.</p>
+<p>It is commonly used when you want a loop to run a specific number of times.</p>
+<p>Common patterns:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">range</span>(m)          <span class="co"># 0 to m - 1</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">range</span>(n, m)       <span class="co"># n to m - 1</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">range</span>(n, m, step) <span class="co"># n to m - 1 by step</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Key idea
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>range()</code> stops <strong>before</strong> the ending number.</p>
+<p>So <code>range(5)</code> gives:</p>
+<pre class="text"><code>0, 1, 2, 3, 4</code></pre>
+<p>It does <strong>not</strong> include 5.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="rangem-start-at-0" class="level2">
+<h2 class="anchored" data-anchor-id="rangem-start-at-0"><code>range(m)</code>: Start at 0</h2>
+<p>When <code>range()</code> receives one argument, it starts at 0 and stops before that number.</p>
+<div class="python-example">
+<textarea>for i in range(5):
+    print(i)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>This loop runs five times, but the values are <code>0, 1, 2, 3, 4</code>.</p>
+<hr>
+</section>
+<section id="rangen-m-choose-a-start-and-stop" class="level2">
+<h2 class="anchored" data-anchor-id="rangen-m-choose-a-start-and-stop"><code>range(n, m)</code>: Choose a Start and Stop</h2>
+<p>When <code>range()</code> receives two arguments, the first is the starting value and the second is the stopping value.</p>
+<div class="python-example">
+<textarea>for i in range(1, 6):
+    print(i)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>This produces <code>1, 2, 3, 4, 5</code> because the loop stops before 6.</p>
+<hr>
+</section>
+<section id="rangen-m-step-choose-the-step-size" class="level2">
+<h2 class="anchored" data-anchor-id="rangen-m-step-choose-the-step-size"><code>range(n, m, step)</code>: Choose the Step Size</h2>
+<p>The third argument controls how much the value changes each time.</p>
+<div class="python-example">
+<textarea>for i in range(0, 10, 2):
+    print(i)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>This loop counts by 2.</p>
+<hr>
+</section>
+<section id="counting-backward-with-range" class="level2">
+<h2 class="anchored" data-anchor-id="counting-backward-with-range">Counting Backward with <code>range()</code></h2>
+<p>The step can also be negative.</p>
+<div class="python-example">
+<textarea>for i in range(5, 0, -1):
+    print(i)
+
+print("Blast off!")
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>Because the stop value is not included, <code>range(5, 0, -1)</code> stops before 0.</p>
+<hr>
+</section>
+<section id="when-should-you-use-range" class="level2">
+<h2 class="anchored" data-anchor-id="when-should-you-use-range">When Should You Use <code>range()</code>?</h2>
+<p>Use <code>range()</code> when you need controlled repetition or numeric positions.</p>
+<p>Good uses:</p>
+<ul>
+<li>Repeat something 10 times.</li>
+<li>Count from one number to another.</li>
+<li>Access list items by position.</li>
+<li>Create simulated data.</li>
+</ul>
+<p>Less good use:</p>
+<ul>
+<li>Looping over items when you do not need their positions.</li>
+</ul>
+<p>Compare these two approaches.</p>
+<div class="python-example">
+<textarea>data = ["a", "b", "c"]
+
+print("Using range and indexes:")
+for i in range(len(data)):
+    print(i, data[i])
+
+print("\nLooping directly over values:")
+for value in data:
+    print(value)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<hr>
+</section>
+<section id="enumerate-a-better-way-to-track-indexes" class="level2">
+<h2 class="anchored" data-anchor-id="enumerate-a-better-way-to-track-indexes"><code>enumerate()</code>: A Better Way to Track Indexes</h2>
+<p>Sometimes you need both:</p>
+<ul>
+<li>The position of the item.</li>
+<li>The item itself.</li>
+</ul>
+<p>For that, use <code>enumerate()</code>.</p>
+<div class="python-example">
+<textarea>data = ["a", "b", "c"]
+
+for index, value in enumerate(data):
+    print(index, value)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p><code>enumerate()</code> is usually cleaner than this:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(data)):</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(i, data[i])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="starting-enumerate-at-1" class="level2">
+<h2 class="anchored" data-anchor-id="starting-enumerate-at-1">Starting <code>enumerate()</code> at 1</h2>
+<p>By default, <code>enumerate()</code> starts counting at 0. You can change that with <code>start=1</code>.</p>
+<div class="python-example">
+<textarea>tasks = ["load data", "clean data", "analyze data", "write report"]
+
+for number, task in enumerate(tasks, start=1):
+    print(f"Step {number}: {task}")
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>This is useful when creating numbered instructions or reports for humans.</p>
+<hr>
+</section>
+<section id="nested-for-loops" class="level2">
+<h2 class="anchored" data-anchor-id="nested-for-loops">Nested For Loops</h2>
+<p>A nested loop is a loop inside another loop.</p>
+<div class="python-example">
+<textarea>for i in range(3):
+    for j in range(2):
+        print(f"i={i}, j={j}")
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>The outer loop controls <code>i</code>. The inner loop controls <code>j</code>.</p>
+<p>For every single value of <code>i</code>, the inner loop runs completely.</p>
+<hr>
+</section>
+<section id="understanding-nested-loop-output" class="level2">
+<h2 class="anchored" data-anchor-id="understanding-nested-loop-output">Understanding Nested Loop Output</h2>
+<p>Think of nested loops as a table.</p>
+<p>If the outer loop has 3 values and the inner loop has 2 values, then the total number of combinations is:</p>
+<pre class="text"><code>3 * 2 = 6</code></pre>
+<div class="python-example">
+<textarea>outer_values = ["A", "B", "C"]
+inner_values = [1, 2]
+
+for outer in outer_values:
+    for inner in inner_values:
+        print(outer, inner)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<hr>
+</section>
+<section id="what-is-an-f-string" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-an-f-string">What Is an f-string?</h2>
+<p>An f-string lets you insert variables or expressions directly into a string.</p>
+<div class="python-example">
+<textarea>name = "Alice"
+print(f"Hello {name}")
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>Anything inside <code>{}</code> is evaluated by Python.</p>
+<div class="python-example">
+<textarea>score = 87
+print(f"The student's score is {score}.")
+print(f"With 5 extra points, the score is {score + 5}.")
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<hr>
+</section>
+<section id="formatting-numbers-with-f-strings" class="level2">
+<h2 class="anchored" data-anchor-id="formatting-numbers-with-f-strings">Formatting Numbers with f-strings</h2>
+<p>F-strings are useful for formatting decimal numbers.</p>
+<div class="python-example">
+<textarea>accuracy = 0.87342
+
+print(f"Accuracy: {accuracy}")
+print(f"Accuracy rounded to two decimals: {accuracy:.2f}")
+print(f"Accuracy as a percentage: {accuracy:.1%}")
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>This is especially helpful when reporting results from data analysis.</p>
+<hr>
+</section>
+<section id="common-loop-pattern-accumulation" class="level2">
+<h2 class="anchored" data-anchor-id="common-loop-pattern-accumulation">Common Loop Pattern: Accumulation</h2>
+<p>Accumulation means combining values across iterations.</p>
+<p>A common example is summing numbers.</p>
+<div class="python-example">
+<textarea>numbers = [1, 2, 3, 4]
+
+total = 0
+
+for num in numbers:
+    total += num
+
+print(total)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>The line <code>total += num</code> means:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>total <span class="op">=</span> total <span class="op">+</span> num</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="accumulation-example-average-score" class="level2">
+<h2 class="anchored" data-anchor-id="accumulation-example-average-score">Accumulation Example: Average Score</h2>
+<p>To compute an average manually, we can sum the values and divide by the number of values.</p>
+<div class="python-example">
+<textarea>scores = [88, 92, 79, 94, 85]
+
+total = 0
+
+for score in scores:
+    total += score
+
+average = total / len(scores)
+
+print(f"Total: {total}")
+print(f"Average: {average:.1f}")
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>Python has built-in tools like <code>sum()</code>, but writing the loop helps you understand what is happening.</p>
+<hr>
+</section>
+<section id="common-loop-pattern-counter" class="level2">
+<h2 class="anchored" data-anchor-id="common-loop-pattern-counter">Common Loop Pattern: Counter</h2>
+<p>A counter tracks how many times something happens.</p>
+<div class="python-example">
+<textarea>scores = [0.7, 0.2, 0.9, 0.4]
+
+count = 0
+
+for score in scores:
+    if score &gt;= 0.6:
+        count += 1
+
+print(count)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>This pattern is common when counting records that meet a condition.</p>
+<hr>
+</section>
+<section id="counter-example-count-high-scores" class="level2">
+<h2 class="anchored" data-anchor-id="counter-example-count-high-scores">Counter Example: Count High Scores</h2>
+<div class="python-example">
+<textarea>scores = [88, 92, 79, 94, 85, 73, 91]
+
+high_score_count = 0
+
+for score in scores:
+    if score &gt;= 90:
+        high_score_count += 1
+
+print(f"Number of high scores: {high_score_count}")
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>Try changing the threshold from <code>90</code> to <code>85</code> and run it again.</p>
+<hr>
+</section>
+<section id="common-loop-pattern-building-a-list" class="level2">
+<h2 class="anchored" data-anchor-id="common-loop-pattern-building-a-list">Common Loop Pattern: Building a List</h2>
+<p>Sometimes we want to create a new list from an existing list.</p>
+<div class="python-example">
+<textarea>numbers = [1, -2, 3, -4, 5]
+
+positives = []
+
+for num in numbers:
+    if num &gt; 0:
+        positives.append(num)
+
+print(positives)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>This pattern is useful for filtering data.</p>
+<hr>
+</section>
+<section id="building-a-transformed-list" class="level2">
+<h2 class="anchored" data-anchor-id="building-a-transformed-list">Building a Transformed List</h2>
+<p>We can also build a list by transforming each value.</p>
+<div class="python-example">
+<textarea>temperatures_f = [32, 50, 68, 86]
+
+temperatures_c = []
+
+for temp_f in temperatures_f:
+    temp_c = (temp_f - 32) * 5 / 9
+    temperatures_c.append(temp_c)
+
+print(temperatures_c)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>The new list contains Celsius values created from Fahrenheit values.</p>
+<hr>
+</section>
+<section id="list-comprehensions" class="level2">
+<h2 class="anchored" data-anchor-id="list-comprehensions">List Comprehensions</h2>
+<p>A list comprehension is a compact way to create a new list.</p>
+<p>Traditional loop:</p>
+<div class="python-example">
+<textarea>squared = []
+
+for num in [1, 2, 3, 4, 5]:
+    squared.append(num ** 2)
+
+print(squared)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<hr>
+</section>
+<section id="list-comprehension-version" class="level2">
+<h2 class="anchored" data-anchor-id="list-comprehension-version">List Comprehension Version</h2>
+<p>The same logic can be written in one line.</p>
+<div class="python-example">
+<textarea>squared = [num ** 2 for num in [1, 2, 3, 4, 5]]
+
+print(squared)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>General structure:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>[expression <span class="cf">for</span> item <span class="kw">in</span> iterable]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>With a filter:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>[expression <span class="cf">for</span> item <span class="kw">in</span> iterable <span class="cf">if</span> condition]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="filtering-with-list-comprehensions" class="level2">
+<h2 class="anchored" data-anchor-id="filtering-with-list-comprehensions">Filtering with List Comprehensions</h2>
+<p>This list comprehension keeps only even numbers.</p>
+<div class="python-example">
+<textarea>even_numbers = [num for num in range(10) if num % 2 == 0]
+
+print(even_numbers)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>The condition <code>num % 2 == 0</code> checks whether the number is evenly divisible by 2.</p>
+<hr>
+</section>
+<section id="conditional-expressions-in-list-comprehensions" class="level2">
+<h2 class="anchored" data-anchor-id="conditional-expressions-in-list-comprehensions">Conditional Expressions in List Comprehensions</h2>
+<p>You can also use an <code>if/else</code> expression to choose between two output values.</p>
+<div class="python-example">
+<textarea>labels = ["even" if num % 2 == 0 else "odd" for num in range(6)]
+
+print(labels)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>This does not filter the list. It labels every item.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Important distinction
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>These are different patterns:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>[num <span class="cf">for</span> num <span class="kw">in</span> numbers <span class="cf">if</span> num <span class="op">&gt;</span> <span class="dv">0</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>filters the list.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>[<span class="st">"positive"</span> <span class="cf">if</span> num <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="st">"not positive"</span> <span class="cf">for</span> num <span class="kw">in</span> numbers]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>labels every item.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="looping-over-multiple-sequences-with-zip" class="level2">
+<h2 class="anchored" data-anchor-id="looping-over-multiple-sequences-with-zip">Looping Over Multiple Sequences with <code>zip()</code></h2>
+<p>Use <code>zip()</code> when two or more lists are connected by position.</p>
+<div class="python-example">
+<textarea>names = ["Alice", "Bob", "Charlie"]
+scores = [90, 85, 92]
+
+for name, score in zip(names, scores):
+    print(name, score)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>This is cleaner and safer than manually indexing both lists.</p>
+<hr>
+</section>
+<section id="zip-example-build-sentences" class="level2">
+<h2 class="anchored" data-anchor-id="zip-example-build-sentences"><code>zip()</code> Example: Build Sentences</h2>
+<div class="python-example">
+<textarea>countries = ["Japan", "France", "Brazil"]
+capitals = ["Tokyo", "Paris", "Brasilia"]
+
+for country, capital in zip(countries, capitals):
+    print(f"The capital of {country} is {capital}.")
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<hr>
+</section>
+<section id="looping-over-nested-data-structures" class="level2">
+<h2 class="anchored" data-anchor-id="looping-over-nested-data-structures">Looping Over Nested Data Structures</h2>
+<p>Many real-world datasets contain nested structures. A common example is a list of dictionaries.</p>
+<div class="python-example">
+<textarea>students = [
+    {"name": "Alice", "score": 90},
+    {"name": "Bob", "score": 85},
+    {"name": "Charlie", "score": 92}
+]
+
+for student in students:
+    print(student["name"], student["score"])
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>This structure is common when working with:</p>
+<ul>
+<li>JSON data</li>
+<li>API responses</li>
+<li>Web data</li>
+<li>Intelligence reports</li>
+<li>Survey responses</li>
+</ul>
+<hr>
+</section>
+<section id="nested-data-example-filtering-records" class="level2">
+<h2 class="anchored" data-anchor-id="nested-data-example-filtering-records">Nested Data Example: Filtering Records</h2>
+<p>Suppose each dictionary represents one report. We can loop through the reports and print only those with a high priority level.</p>
+<div class="python-example">
+<textarea>reports = [
+    {"id": 1, "topic": "cyber", "priority": "high"},
+    {"id": 2, "topic": "trade", "priority": "medium"},
+    {"id": 3, "topic": "conflict", "priority": "high"}
+]
+
+for report in reports:
+    if report["priority"] == "high":
+        print(f"Report {report['id']}: {report['topic']}")
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<hr>
+</section>
+<section id="controlling-loop-execution-with-break" class="level2">
+<h2 class="anchored" data-anchor-id="controlling-loop-execution-with-break">Controlling Loop Execution with <code>break</code></h2>
+<p><code>break</code> exits the loop immediately.</p>
+<div class="python-example">
+<textarea>for num in range(10):
+    if num == 5:
+        break
+    print(num)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>Once <code>num == 5</code>, the loop stops entirely.</p>
+<hr>
+</section>
+<section id="break-example-search-until-found" class="level2">
+<h2 class="anchored" data-anchor-id="break-example-search-until-found"><code>break</code> Example: Search Until Found</h2>
+<p>This pattern is useful when you are searching for something.</p>
+<div class="python-example">
+<textarea>names = ["Alice", "Bob", "Charlie", "Diana"]
+
+target = "Charlie"
+
+for name in names:
+    print(f"Checking {name}")
+    if name == target:
+        print("Found the target!")
+        break
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>The loop stops once it finds the target.</p>
+<hr>
+</section>
+<section id="controlling-loop-execution-with-continue" class="level2">
+<h2 class="anchored" data-anchor-id="controlling-loop-execution-with-continue">Controlling Loop Execution with <code>continue</code></h2>
+<p><code>continue</code> skips the current iteration and moves to the next one.</p>
+<div class="python-example">
+<textarea>for num in range(5):
+    if num == 2:
+        continue
+    print(num)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>When <code>num == 2</code>, that iteration is skipped.</p>
+<hr>
+</section>
+<section id="continue-example-skip-missing-data" class="level2">
+<h2 class="anchored" data-anchor-id="continue-example-skip-missing-data"><code>continue</code> Example: Skip Missing Data</h2>
+<p>In data work, missing values are common. Here we skip <code>None</code> values.</p>
+<div class="python-example">
+<textarea>scores = [88, None, 92, 79, None, 85]
+
+valid_scores = []
+
+for score in scores:
+    if score is None:
+        continue
+    valid_scores.append(score)
+
+print(valid_scores)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<hr>
+</section>
+<section id="off-by-one-errors" class="level2">
+<h2 class="anchored" data-anchor-id="off-by-one-errors">Off-by-One Errors</h2>
+<p>Off-by-one errors happen when a loop runs one too many or one too few times.</p>
+<p>They are especially common with <code>range()</code>.</p>
+<div class="python-example">
+<textarea>for i in range(5):
+    print(i)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>Remember:</p>
+<ul>
+<li><code>range(5)</code> gives <code>0, 1, 2, 3, 4</code>.</li>
+<li>It does not include <code>5</code>.</li>
+<li><code>range(1, 6)</code> gives <code>1, 2, 3, 4, 5</code>.</li>
+</ul>
+<hr>
+</section>
+<section id="debugging-strategy-print-the-loop-variable" class="level2">
+<h2 class="anchored" data-anchor-id="debugging-strategy-print-the-loop-variable">Debugging Strategy: Print the Loop Variable</h2>
+<p>When a loop is confusing, print the loop variable at each step.</p>
+<div class="python-example">
+<textarea>numbers = [10, 20, 30]
+
+for num in numbers:
+    print("Current value of num:", num)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>This helps you see what Python is doing during each iteration.</p>
+<hr>
+</section>
+<section id="debugging-strategy-print-intermediate-results" class="level2">
+<h2 class="anchored" data-anchor-id="debugging-strategy-print-intermediate-results">Debugging Strategy: Print Intermediate Results</h2>
+<p>If a calculation is wrong, print the result as it changes.</p>
+<div class="python-example">
+<textarea>numbers = [1, 2, 3, 4]
+
+total = 0
+
+for num in numbers:
+    total += num
+    print(f"After adding {num}, total is {total}")
+
+print("Final total:", total)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>This is one of the simplest and most useful debugging strategies.</p>
+<hr>
+</section>
+<section id="practice-1-predict-the-output" class="level2">
+<h2 class="anchored" data-anchor-id="practice-1-predict-the-output">Practice 1: Predict the Output</h2>
+<p>Before running the code, answer these questions:</p>
+<ol type="1">
+<li>How many lines will print?</li>
+<li>What is the first line?</li>
+<li>What is the last line?</li>
+</ol>
+<div class="python-example">
+<textarea>for i in range(3):
+    for j in range(4):
+        print(i, j)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<hr>
+</section>
+<section id="practice-1-solution" class="level2">
+<h2 class="anchored" data-anchor-id="practice-1-solution">Practice 1 Solution</h2>
+<p>The loop prints 12 total lines because:</p>
+<pre class="text"><code>3 * 4 = 12</code></pre>
+<p>The first line is:</p>
+<pre class="text"><code>0 0</code></pre>
+<p>The last line is:</p>
+<pre class="text"><code>2 3</code></pre>
+<p>The outer loop goes through <code>0, 1, 2</code>. The inner loop goes through <code>0, 1, 2, 3</code> for each value of the outer loop.</p>
+<hr>
+</section>
+<section id="practice-2-modify-the-code" class="level2">
+<h2 class="anchored" data-anchor-id="practice-2-modify-the-code">Practice 2: Modify the Code</h2>
+<p>Try changing the code so that it prints only scores greater than or equal to 80.</p>
+<div class="python-example">
+<textarea>scores = [72, 85, 91, 64, 88, 79]
+
+for score in scores:
+    print(score)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<p>Hint: You need an <code>if</code> statement inside the loop.</p>
+<hr>
+</section>
+<section id="practice-2-solution" class="level2">
+<h2 class="anchored" data-anchor-id="practice-2-solution">Practice 2 Solution</h2>
+<div class="python-example">
+<textarea>scores = [72, 85, 91, 64, 88, 79]
+
+for score in scores:
+    if score &gt;= 80:
+        print(score)
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<hr>
+</section>
+<section id="practice-3-build-a-summary" class="level2">
+<h2 class="anchored" data-anchor-id="practice-3-build-a-summary">Practice 3: Build a Summary</h2>
+<p>The following data represents short reports. Count how many reports have the topic <code>"cyber"</code>.</p>
+<div class="python-example">
+<textarea>reports = [
+    {"id": 1, "topic": "cyber"},
+    {"id": 2, "topic": "trade"},
+    {"id": 3, "topic": "cyber"},
+    {"id": 4, "topic": "conflict"},
+    {"id": 5, "topic": "cyber"}
+]
+
+# Write your solution below
+
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<hr>
+</section>
+<section id="practice-3-solution" class="level2">
+<h2 class="anchored" data-anchor-id="practice-3-solution">Practice 3 Solution</h2>
+<div class="python-example">
+<textarea>reports = [
+    {"id": 1, "topic": "cyber"},
+    {"id": 2, "topic": "trade"},
+    {"id": 3, "topic": "cyber"},
+    {"id": 4, "topic": "conflict"},
+    {"id": 5, "topic": "cyber"}
+]
+
+cyber_count = 0
+
+for report in reports:
+    if report["topic"] == "cyber":
+        cyber_count += 1
+
+print(f"Cyber reports: {cyber_count}")
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<hr>
+</section>
+<section id="mini-project-summarizing-survey-responses" class="level2">
+<h2 class="anchored" data-anchor-id="mini-project-summarizing-survey-responses">Mini-Project: Summarizing Survey Responses</h2>
+<p>This example shows how loops can summarize simple survey data.</p>
+<p>Each response is stored as a dictionary.</p>
+<div class="python-example">
+<textarea>responses = [
+    {"student": "A", "rating": 5, "completed": True},
+    {"student": "B", "rating": 4, "completed": True},
+    {"student": "C", "rating": 2, "completed": False},
+    {"student": "D", "rating": 5, "completed": True},
+    {"student": "E", "rating": 3, "completed": False}
+]
+
+total_rating = 0
+ completed_count = 0
+
+for response in responses:
+    if response["completed"]:
+        total_rating += response["rating"]
+        completed_count += 1
+
+average_rating = total_rating / completed_count
+
+print(f"Completed responses: {completed_count}")
+print(f"Average rating among completed responses: {average_rating:.2f}")
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>There is a bug in this mini-project
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The code above intentionally contains an indentation error before <code>completed_count = 0</code>. Try running it, then fix it by deleting the extra space before <code>completed_count</code>.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="mini-project-solution" class="level2">
+<h2 class="anchored" data-anchor-id="mini-project-solution">Mini-Project Solution</h2>
+<div class="python-example">
+<textarea>responses = [
+    {"student": "A", "rating": 5, "completed": True},
+    {"student": "B", "rating": 4, "completed": True},
+    {"student": "C", "rating": 2, "completed": False},
+    {"student": "D", "rating": 5, "completed": True},
+    {"student": "E", "rating": 3, "completed": False}
+]
+
+total_rating = 0
+completed_count = 0
+
+for response in responses:
+    if response["completed"]:
+        total_rating += response["rating"]
+        completed_count += 1
+
+average_rating = total_rating / completed_count
+
+print(f"Completed responses: {completed_count}")
+print(f"Average rating among completed responses: {average_rating:.2f}")
+</textarea>
+<button onclick="runPythonExample(this)">
+Run Code
+</button>
+<pre class="python-output"></pre>
+</div>
+<hr>
+</section>
+<section id="checklist-for-writing-loops" class="level2">
+<h2 class="anchored" data-anchor-id="checklist-for-writing-loops">Checklist for Writing Loops</h2>
+<p>When writing a loop, ask yourself:</p>
+<ol type="1">
+<li>What collection am I looping over?</li>
+<li>What should the loop variable be called?</li>
+<li>What should happen during each iteration?</li>
+<li>Do I need to keep track of a total, count, or new list?</li>
+<li>Do I need an <code>if</code> statement inside the loop?</li>
+<li>Should I use <code>enumerate()</code> because I need positions?</li>
+<li>Should I use <code>zip()</code> because I need to combine related lists?</li>
+<li>Could a list comprehension make the code cleaner?</li>
+</ol>
+<hr>
+</section>
+<section id="common-mistakes-and-fixes" class="level2">
+<h2 class="anchored" data-anchor-id="common-mistakes-and-fixes">Common Mistakes and Fixes</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Mistake</th>
+<th>Symptom</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Forgetting the colon</td>
+<td><code>SyntaxError</code></td>
+<td>Add <code>:</code> after the <code>for</code> statement</td>
+</tr>
+<tr class="even">
+<td>Wrong indentation</td>
+<td><code>IndentationError</code> or incorrect output</td>
+<td>Indent the loop body consistently</td>
+</tr>
+<tr class="odd">
+<td>Off-by-one error</td>
+<td>Missing or extra values</td>
+<td>Remember that <code>range()</code> excludes the stop value</td>
+</tr>
+<tr class="even">
+<td>Using indexes unnecessarily</td>
+<td>Code is harder to read</td>
+<td>Loop directly over items</td>
+</tr>
+<tr class="odd">
+<td>Modifying a list while looping over it</td>
+<td>Unexpected behavior</td>
+<td>Build a new list instead</td>
+</tr>
+<tr class="even">
+<td>Forgetting to initialize a counter</td>
+<td><code>NameError</code></td>
+<td>Set the counter to 0 before the loop</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="key-takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h2>
+<ul>
+<li>A <code>for</code> loop repeats code once for each item in an iterable.</li>
+<li>The loop variable changes value during each iteration.</li>
+<li>Indentation determines what belongs inside the loop.</li>
+<li><code>range()</code> is useful for controlled counting.</li>
+<li><code>enumerate()</code> is useful when you need both index and value.</li>
+<li><code>zip()</code> is useful when looping over related sequences.</li>
+<li>Loops are often used for accumulation, counting, filtering, and transformation.</li>
+<li>List comprehensions provide a compact way to create new lists.</li>
+<li>Debug loops by printing loop variables and intermediate results.</li>
+</ul>
+<hr>
+</section>
+<section id="additional-practice-prompts" class="level2">
+<h2 class="anchored" data-anchor-id="additional-practice-prompts">Additional Practice Prompts</h2>
+<p>Try solving these on your own:</p>
+<ol type="1">
+<li>Given a list of numbers, print only the negative numbers.</li>
+<li>Given a list of names, print only names longer than five characters.</li>
+<li>Given a list of scores, count how many are passing.</li>
+<li>Given a dictionary of countries and capitals, print one sentence for each pair.</li>
+<li>Given two lists, <code>students</code> and <code>scores</code>, use <code>zip()</code> to print each student’s score.</li>
+<li>Given a list of words, create a new list containing the length of each word.</li>
+<li>Given a list of report dictionaries, count how many reports have <code>priority == "high"</code>.</li>
+<li>Rewrite a traditional loop as a list comprehension.</li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

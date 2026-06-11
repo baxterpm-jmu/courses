@@ -1,0 +1,24 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "IA 241: Introduction to Programming and Data Science"
+  navbar:
+    background: "#450084"
+    foreground: "#ffffff"
+    left:
+      - href: index.qmd
+        text: "Week 6: For Loops"
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    toc-depth: 3
+    number-sections: false
+    code-copy: true
+    code-fold: false
+    smooth-scroll: true
+    page-layout: full
